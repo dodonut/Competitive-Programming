@@ -54,31 +54,7 @@ int main(){
     */
 
     //SUM WITHOUT THE N TO TELL HOW MANY INTEGERS HAVE TO SUM
-    /*
-    int a, b;
-    string s;
-    while (getline(cin, s)){
-        b = 0;
-        cout << s << endl;
-        for (int i = 0; i < s.size(); i++){
-            //cout << s[i];
-            if (!(isspace(s[i]))) b += s[i] - '0';
-        }
-        cout << b << endl;
-    }
-    */
-    /* strtok example */
-
-
-    char str[] ="- This, a sample string.";
-    char * pch;
-    printf ("Splitting string \"%s\" into tokens:\n",str);
-    pch = strtok(str," ,.-");
-    while (pch != NULL){
-    printf ("%s\n",pch);
-    pch = strtok (NULL, " ,.-");
-    }
-    return 0;
+    //???
 
         
 }
