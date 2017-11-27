@@ -1,9 +1,10 @@
-#include <iostream>
+include <iostream>
 using namespace std;
 int main(){
-    int np, c = 0;
+    int np, c = 0, counter = 0;
     while(cin >> np){
         c = 0;
+        if(counter > 0) cout << endl;
         int money[np]={0};
         int NP = np;
         string people[np];
@@ -22,7 +23,7 @@ int main(){
             for(int i = 0; i < NP; i++){
                 if (people[i] == giver){
                     money[i] += moneyspent;
-                    cout << "giver " << giver << '\t' << money[i] << endl;
+                    //cout << "giver " << giver << '\t' << money[i] << endl;
                 }
             }
             string peoplegiven[numberpeoplegiven];
@@ -43,6 +44,7 @@ int main(){
         for(int i = 0; i < NP; i++){
             cout << people[i] << " " << money[i] << endl;
         }
-        cout << endl;
+        counter++;
+        
     }
 }
