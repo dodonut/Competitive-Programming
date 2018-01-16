@@ -5,13 +5,14 @@ int main(int argc, char const* argv[])
 {
   int A, C, c;
   int counter, i;
-  int vale, peak, Greatest;
+  int vale, peak, Greatest, secGreat;
   while (cin >> A >> C, A) {
     int X[C+1] = {0};
     c = 0;
     while (c < C) cin >> X[c++];
     counter = 0;
     peak = X[0];
+    secGreat = X[0];
     vale = X[0];
     Greatest = X[0];
     //too slow
@@ -32,6 +33,8 @@ int main(int argc, char const* argv[])
     for (i = 1; i < C-1; i++) {
       if (X[i-1] <= X[i]) {
         peak = X[i];
+        secGreat = Greatest;
+        Greatest = max(peak, Greatest);
         if (X[i] > X[i+1]) {
           counter += peak - vale;
         }
@@ -39,11 +42,16 @@ int main(int argc, char const* argv[])
       else {
         vale = X[i];
       }
-      Greatest = max(X[i], Greatest);
     }
-    Greatest = max(X[i+1], Greatest);
-    counter += A - Greatest;
-    counter += X[i+1] < X[i] ? peak - X[i+1]: peak-vale;
+    Greatest = max(X[C-1], Greatest);
+    if(Greatest == A) counter++;
+    //last one was a vale
+    if(X[C-1] < X[C-2]) counter += peak - X[C-1];
+    //last one was equal 
+    else if(X[C-1] == X[C-2]) counter += peak - vale;
+    //last one was greater
+    else counter += X[C-1] - vale;
+    counter += Greatest != X[0] ? A - Greatest : A - secGreat;
     cout << counter << endl;
   }
 }
