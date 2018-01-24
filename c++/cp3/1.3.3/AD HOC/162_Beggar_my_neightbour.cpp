@@ -3,6 +3,17 @@
 #include <vector>
 
 using namespace std;
+//display deck
+void display_deck(stack<string> deck) {
+  std::cout << "disp deck" << std::endl;
+  std::cout << deck.size() << std::endl;
+  std::cout << deck.empty() << std::endl;
+  while (!deck.empty()) {
+    std::cout << deck.top() << ' ';
+    deck.pop();
+  }
+  std::cout << std::endl;
+}
 //return true if is a face, false otherwise
 bool isFace(const string& card) {
   if (card[1] == 'A' || card[1] == 'J' || card[1] == 'Q' || card[1] == 'K') {
@@ -10,130 +21,115 @@ bool isFace(const string& card) {
   }
   return false;
 }
-//return a face if it was founded when covering, blank string otherwise
-string coverUntilFindsFaceOrDone(stack<string>& heap, stack<string>& deck_covering, const int iter) {
-  string temp;
-  for (int i = 0; i < iter; i++) {
-    temp = deck_covering.top();
-    deck_covering.pop();
-    heap.push(temp);
-    if (isFace(temp)) {
-      return temp;
-    }
-  }
-  return "";
-}
-//return pair(coverUntilFindsFaceOrDone, caller)
-std::pair<string, int> cover(stack<string>& heap, stack<string>& deck_covering,const int faceCaller, const string& faceCallerCard) {
-  int a;
-  switch (faceCallerCard[1]) {
+//faceMeans : return an integer that means how many cards of cover that face mean by the rules
+int faceMeans(char face) {
+  switch (face) {
     case 'J':
-      a = 1;
-      break;
+      return 1;
     case 'Q':
-      a = 2;
-      break;
+      return 2;
     case 'K':
-      a = 3;
-      break;
-    case 'A':
-      a = 4;
-      break;
-
-  }
-  return make_pair(coverUntilFindsFaceOrDone(heap, deck_covering, a), faceCaller);
-}
-//deal cards from the heap to the players
-void dealCards(stack<string>& heap, stack<string>& d_hand, stack<string>& nd_hand ) {
-  int s = heap.size();
-  for (unsigned long i = 0; i < s; i++) {
-    if (i%2 == 0) {
-      nd_hand.push(heap.top());
-    }
-    else {
-      d_hand.push(heap.top());
-    }
-    heap.pop();
+      return 3;
+    default:
+      return 4;
   }
 }
-//return a std::pair<string, int> with the face and the player who's belong, blank string and -1 otherwise
-std::pair<string, int> dealUntilFindsFace(stack<string>& heap, stack<string>& d_hand, stack<string>& nd_hand ) {
-  std::cout << "here" << std::endl;
-  vector<stack<string>> vss {&d_hand, &nd_hand};
-  int playerturn = 1;
-  std::cout << "here" << std::endl;
-  while (!d_hand.empty() || !nd_hand.empty()) {
-    string temp = vss[playerturn].top();
-    vss[playerturn].pop();
-    heap.push(temp);
-    playerturn = (playerturn + 1) % 2;
-    if (isFace(temp)) {
-      return std::make_pair(temp, playerturn);
+//COVER : return an integer that means which player should take the heap
+int cover(stack<string>& heap, stack<string>& player1, stack<string>& player2, int whoPlayedTheCard) {
+  int n = faceMeans(heap.top()[1]);
+  for (int i = 0; i < n; i++) {
+    if (whoPlayedTheCard == 0 && !player2.empty()) {
+      heap.push(player2.top());
+      player2.pop();
+      if (isFace(heap.top())) {
+        n = faceMeans(heap.top()[1]);
+        i = 0;
+        whoPlayedTheCard = (whoPlayedTheCard + 1) % 2;
+      }
+    }
+    else if(whoPlayedTheCard == 1 && !player1.empty()){
+      heap.push(player1.top());
+      player1.pop();
+      if (isFace(heap.top())) {
+        n = faceMeans(heap.top()[1]);
+        i = 0;
+        whoPlayedTheCard = (whoPlayedTheCard + 1) % 2;
+      }
     }
   }
-  return std::make_pair("", -1);
+  return whoPlayedTheCard;
+}
+//invert deck : returns a inverted stack
+stack<string> invert(const stack<string>& heap) {
+  stack<string> temp;
+  stack<string> tempheap = heap;
+  while (!tempheap.empty()) {
+    temp.push(tempheap.top());
+    tempheap.pop();
+  }
+  return temp;
 }
 //add the heap to the winnerOfTheHeap top deck without changing the heap order
 void takeTheHeap(stack<string>& heap, stack<string>& winnerOfTheHeap) {
-  stack<string> temp;
-  while (!heap.empty()) {
-    temp.push(heap.top());
-    heap.pop();
+  //inverting the deck of the winner to a temp deck
+  winnerOfTheHeap = invert(winnerOfTheHeap);
+  //placing the deck of the winner of the round on top of the heap
+  while (!winnerOfTheHeap.empty()) {
+    heap.push(winnerOfTheHeap.top());
+    winnerOfTheHeap.pop();
   }
-  while (!temp.empty()) {
-    winnerOfTheHeap.push(temp.top());
-    temp.pop();
-  }
+  //taking all cards to itself
+  winnerOfTheHeap = heap;
 }
 //flow of the game
-void Game(stack<string>& heap,stack<string>& player1,stack<string>& player2 ) {
-  string card;
+void Game() {;
+  string card1, card2;
   string input;
+  stack<string> player1, player2, heap;
+  //player2 will always be the non-dealer
+  //read a complete deck and distribute to the players by the rules
   while (cin >> input && input != "#") {
-    heap.push(input);
-    for (int i = 0; i < 51; i++) {
-      cin >> card;
-      // printf("%s ", card.c_str());
-      heap.push(card);
+    player2.push(input);
+    for (int i = 0; i < 25; i++) {
+      cin >> card1;
+      cin >> card2;
+      player1.push(card1);
+      player2.push(card2);
     }
-    //initial deal of 26 cards
-    // std::cout << "here" << std::endl;
-    dealCards(heap, player1, player2);
-    std::pair<string, int> pair;
-    //put cards on the heap until one of the players takes a face card
-    //default value to start the loop
+    cin >> card1;
+    player1.push(card1);
+
+
+    //player2 starts at first time
+    int playerturn = 1;
     //games on until one of players loses by emptying their hands
     while(!player1.empty() || !player2.empty()){
-      pair = dealUntilFindsFace(heap, player1, player2);
-      std::cout << "here" << std::endl;
-      while (pair.first != "") {
-        if(pair.second == -1){
-          //game finished over normal dealing
-          return;
-        }
-        do {
-          pair = pair.second == 0 ? cover(heap, player2, 1, pair.first) :
-            cover(heap, player1, 2, pair.first);
-          //returned a face?
-          if (!pair.first.empty()) {
-            pair.second = (pair.second + 1) % 2;
-          }
-        } while (!pair.first.empty());
+      if (playerturn == 0) {
+        heap.push(player1.top());
+        player1.pop();
+      } else {
+        heap.push(player2.top());
+        player2.pop();
       }
-      pair.second == 0 ? takeTheHeap(heap, player1) : takeTheHeap(heap, player2);
+      if (isFace(heap.top())) {
+        playerturn = cover(heap, player1, player2, playerturn);
+        playerturn == 0 ? takeTheHeap(heap, player1) : takeTheHeap(heap, player2);
+        //change turn to go back again on lines below to avoid use a continue statemant
+        playerturn = (playerturn + 1) % 2;
+      }
+      playerturn = (playerturn + 1) % 2;
+    }
+    if (player1.empty()) {
+      printf("%d %d", 2, player2.size());
+    }
+    else {
+      printf("%d %d", 1, player1.size());
     }
   }
 }
 
 int main()
 {
-  stack<string> player1, player2, heap;
-  Game(heap, player1, player2);
-  if (player1.empty()) {
-    printf("%d %d", 2, player2.size());
-  }
-  else {
-    printf("%d %d", 1, player1.size());
-  }
+  Game();
   return 0;
 }
