@@ -6,11 +6,23 @@ using namespace std;
 //display deck
 void display_deck(stack<string> deck, int player) {
   cout << player << endl;
+  int i = 0;
   while (!deck.empty()) {
-    std::cout << deck.top() << ' ';
+    std::cout << deck.top()[1] << ' ';
     deck.pop();
+    i++;
   }
+  printf("%d", i );
   printf("\n\n");
+}
+//popCard : return 0 if sucess or 1 othrewise
+int popCard(stack<string>& heap, stack<string>& toTake) {
+  if(!toTake.empty()){
+    heap.push(toTake.top());
+    toTake.pop();
+    return 0;
+  }
+  return 1;
 }
 //return true if is a face, false otherwise
 bool isFace(const string& card) {
@@ -37,9 +49,8 @@ int faceMeans(string face) {
 int cover(stack<string>& heap, stack<string>& player1, stack<string>& player2, int whoPlayedTheCard) {
   int n = faceMeans(heap.top());
   for (int i = 0; i < n; i++) {
-    if (whoPlayedTheCard == 0 && !player2.empty()) {
-      heap.push(player2.top());
-      player2.pop();
+    if (whoPlayedTheCard == 0) {
+      if(popCard(heap, player2)) return -1;
       if (isFace(heap.top())) {
         n = faceMeans(heap.top());
         //to start at 0 again because its going to increment at the end of statment
@@ -47,9 +58,8 @@ int cover(stack<string>& heap, stack<string>& player1, stack<string>& player2, i
         whoPlayedTheCard = (whoPlayedTheCard + 1) % 2;
       }
     }
-    else if(whoPlayedTheCard == 1 && !player1.empty()){
-      heap.push(player1.top());
-      player1.pop();
+    else if(whoPlayedTheCard == 1){
+      if(popCard(heap, player1)) return -1;
       if (isFace(heap.top())) {
         n = faceMeans(heap.top());
         i = -1;
@@ -60,9 +70,9 @@ int cover(stack<string>& heap, stack<string>& player1, stack<string>& player2, i
   return whoPlayedTheCard;
 }
 //invert deck : returns a inverted stack
-stack<string> invert(const stack<string>& heap) {
+stack<string> invert(const stack<string>& deck) {
   stack<string> temp;
-  stack<string> tempheap = heap;
+  stack<string> tempheap = deck;
   while (!tempheap.empty()) {
     temp.push(tempheap.top());
     tempheap.pop();
@@ -91,6 +101,7 @@ void Game() {
   stack<string> player1, player2, heap;
   //player2 will always be the non-dealer
   //read a complete deck and distribute to the players by the rules
+  int c = 1;
   while (cin >> input && input != "#") {
     player2.push(input);
     for (int i = 0; i < 25; i++) {
@@ -102,56 +113,52 @@ void Game() {
     cin >> card1;
     player1.push(card1);
 
-    // display_deck(player1);
-    // display_deck(player2);
-
     //player2 starts at first time
     int playerturn = 1;
     //games on until one of players loses by emptying their hands
-    int i = 0;
-    while(!player1.empty() && !player2.empty()){
+    //THE GAME
+    //=========================================
+    while(true){
       if (playerturn == 0) {
-        heap.push(player1.top());
-        player1.pop();
+        if(popCard(heap, player1)) break;
       } else {
-        heap.push(player2.top());
-        player2.pop();
+        if(popCard(heap, player2)) break;
       }
-      i++;
-      if(player1.empty() || player2.empty()) break;
       if (isFace(heap.top())) {
-        playerturn = cover(heap, player1, player2, playerturn);
-        if (playerturn == 0) {
-          if (!player2.empty()) {
-            takeTheHeap(heap, player1);
-            display_deck(player1, 1);
-            display_deck(player2, 2);
-          }
+        int result = cover(heap, player1, player2, playerturn);
+        if (result == 0) {
+          takeTheHeap(heap, player1);
+          //trick the loop so I can play again
+          playerturn = 1;
+        }
+        else if (result == 1) {
+          takeTheHeap(heap, player2);
+          playerturn = 0;
         }
         else {
-          if (!player1.empty()) {
-            takeTheHeap(heap, player2);
-            display_deck(player1, 1);
-            display_deck(player2, 2);
-          }
+          break;
         }
-        //change turn to go back again on lines below to avoid use a continue statemant
-        playerturn = (playerturn + 1) % 2;
       }
       playerturn = (playerturn + 1) % 2;
 
     }
-    if (!player1.empty()) {
-      printf("%d %d\n", 1, player1.size());
+    //=========================================
+    if (player1.empty() && player2.empty()) {
+      printf("%d%3d\n",1, player1.size());
+    } else {
+      if (player1.empty()) {
+        printf("%d%3d\n",2, player2.size());
+      } else {
+        printf("%d%3d\n",1, player1.size());
+      }
     }
-    else {
-      printf("%d %d\n", 2, player2.size());
-    }
+    //emptying all stacks before next game
     while(!player1.empty()) player1.pop();
     while(!player2.empty()) player2.pop();
     while(!heap.empty()) heap.pop();
   }
 }
+
 
 int main()
 {
