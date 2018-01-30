@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cmath>
 #include <cstring>
+#include <string>
 #include <cctype>
 #include <iostream>
 #include <algorithm>
@@ -34,26 +35,28 @@ int simpleEval(string var) {
 
 }
 
-int findSuit(string vet[], char suit) {
+int findSuit(string *vet, char suit) {
   int i;
   int counter = 0;
-  iter(i,0,vet->size(), 1){
+  iter(i,0,13, 1){
     if(vet[i][1] == suit) counter++;
   }
   return counter;
 }
 
-int rule1(string vet[]) {
+int rule1(string *vet) {
   int counter = 0;
   int i;
-  iter(i,0,vet->size(),1) counter += simpleEval(vet[i]);
+  iter(i,0,13,1) {
+    counter += simpleEval(vet[i]);
+  }
   return counter;
 }
 
-int rule2(string vet[]) {
+int rule2(string *vet) {
   int i;
   int subtract = 0;
-  iter(i,0,vet->size(), 1){
+  iter(i,0,13,1) {
     if(vet[i][0] == 'K')
       //because the K* is a suit card
       if(findSuit(vet, vet[i][1]) == 1) subtract--;
@@ -61,10 +64,10 @@ int rule2(string vet[]) {
   return subtract;
 }
 
-int rule3(string vet[]) {
+int rule3(string *vet) {
   int i;
   int subtract = 0;
-  iter(i,0,vet->size(), 1){
+  iter(i,0,13,1) {
     if(vet[i][0] == 'Q')
       if(findSuit(vet, vet[i][1]) < 3) subtract--;
   }
@@ -72,17 +75,17 @@ int rule3(string vet[]) {
 
 }
 
-int rule4(string vet[]) {
+int rule4(string *vet) {
   int i;
   int subtract = 0;
-  iter(i,0,vet->size(), 1){
+  iter(i,0,13,1) {
     if(vet[i][0] == 'J')
       if(findSuit(vet, vet[i][1]) < 4) subtract--;
   }
   return subtract;
 }
 
-int rule5(string vet[]) {
+int rule5(string *vet) {
   int add = 0;
   if(findSuit(vet, 'S') == 2) add++;
   if(findSuit(vet, 'D') == 2) add++;
@@ -92,7 +95,7 @@ int rule5(string vet[]) {
 
 }
 
-int rule6(string vet[]) {
+int rule6(string *vet) {
   int add = 0;
   if(findSuit(vet, 'S') == 1) add++;
   if(findSuit(vet, 'D') == 1) add++;
@@ -101,7 +104,7 @@ int rule6(string vet[]) {
   return add;
 }
 
-int rule7(string vet[]) {
+int rule7(string *vet) {
   int add = 0;
   if(findSuit(vet, 'S') == 0) add++;
   if(findSuit(vet, 'D') == 0) add++;
@@ -110,10 +113,10 @@ int rule7(string vet[]) {
   return add;
 }
 
-char mostCard(string vet[]) {
+char mostCard(string *vet) {
   int i;
   int s=0,h=0,d=0,c=0;
-  iter(i,0,vet->size(),1){
+  iter(i,0,13,1){
     if(vet[i][1] == 'S') s++;
     else if(vet[i][1] == 'D') d++;
     else if(vet[i][1] == 'H') h++;
@@ -132,10 +135,10 @@ int whichSuit(char suit) {
   if(suit == 'C') return 4;
 }
 
-bool allSuitStopped(string vet[]) {
+bool allSuitStopped(string *vet) {
   int i;
   int s=0,c=0,h=0,d=0;
-  iter(i,0,vet->size(),1){
+  iter(i,0,13,1){
     if(vet[i][0] == 'A'){
       if(whichSuit(vet[i][1]) == 1) s = 1;
       if(whichSuit(vet[i][1]) == 2) h = 1;
@@ -163,19 +166,23 @@ bool allSuitStopped(string vet[]) {
   return false;
 }
 
-string recommended(string vet[], int eval) {
+string finalEvaluation(string *vet, int eval) {
+  int r5 = rule5(vet);
+  int r6 = rule6(vet);
+  int r7 = rule7(vet);
   if(eval < 14) return "PASS";
-  //eval - rule567 > 15
-  else if(allSuitStopped(vet)) return "BID NO-TRUMP";
-  else return "BID " + to_string(mostCard(vet));
+  else if(allSuitStopped(vet) && (eval - r5 - r6 - r7 ) >= 16) return "BID NO-TRUMP";
+  else {
+    string r = "BID ";
+    r += mostCard(vet);
+    return r;
+  };
 }
 int main()
 {
-  string s;
-  string x[13] = {0};
+  string x[14];
   int i = 0;
-  while (cin >> s) {
-    x[i++] = s;
+  while (cin >> x[i++]) {
     if(i == 13){
       i = 0;
       int eval = 0;
@@ -188,6 +195,7 @@ int main()
       eval += rule6(x);
       eval += rule7(x);
 
+      cout << finalEvaluation(x, eval) << endl;
     }
   }
 }
