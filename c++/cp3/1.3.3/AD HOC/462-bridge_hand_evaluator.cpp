@@ -97,19 +97,19 @@ int rule5(string *vet) {
 
 int rule6(string *vet) {
   int add = 0;
-  if(findSuit(vet, 'S') == 1) add++;
-  if(findSuit(vet, 'D') == 1) add++;
-  if(findSuit(vet, 'H') == 1) add++;
-  if(findSuit(vet, 'C') == 1) add++;
+  if(findSuit(vet, 'S') == 1) add+=2;
+  if(findSuit(vet, 'D') == 1) add+=2;
+  if(findSuit(vet, 'H') == 1) add+=2;
+  if(findSuit(vet, 'C') == 1) add+=2;
   return add;
 }
 
 int rule7(string *vet) {
   int add = 0;
-  if(findSuit(vet, 'S') == 0) add++;
-  if(findSuit(vet, 'D') == 0) add++;
-  if(findSuit(vet, 'H') == 0) add++;
-  if(findSuit(vet, 'C') == 0) add++;
+  if(findSuit(vet, 'S') == 0) add+=2;
+  if(findSuit(vet, 'D') == 0) add+=2;
+  if(findSuit(vet, 'H') == 0) add+=2;
+  if(findSuit(vet, 'C') == 0) add+=2;
   return add;
 }
 
@@ -162,7 +162,7 @@ bool allSuitStopped(string *vet) {
       }
     }
   }
-  if(s,d,h,c) return true;
+  if(s && h && d && c) return true;
   return false;
 }
 
