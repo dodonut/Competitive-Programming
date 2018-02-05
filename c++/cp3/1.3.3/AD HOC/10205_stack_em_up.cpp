@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cmath>
 #include <cstring>
+#include <string>
 #include <cctype>
 #include <iostream>
 #include <algorithm>
@@ -27,138 +28,82 @@ using namespace std;
 
 map<int, string> mountDeck()
 {
-  string suits[]{"C", "D", "H", "S"};
-  string numbers[]{"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"};
+	string suits[] = {"Clubs", "Diamonds", "Hearts", "Spades"};
+	string numbers[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
 
-  map<int, string> deck;
-  int i, j, counter = 1;
-  string card;
-  iter(i, 0, 4, 1)
-  {
-    iter(j, 0, 13, 1)
-    {
-      card += suits[i] + numbers[j];
-      deck[counter++] = card;
-      card = "";
-    }
-  }
-  return deck;
+	map<int, string> deck;
+	int i, j, counter = 1;
+	string card;
+	iter(i, 0, 4, 1)
+	{
+		iter(j, 0, 13, 1)
+		{
+			card += numbers[j] + " of " + suits[i];
+			deck[counter++] = card;
+			card = "";
+		}
+	}
+	return deck;
 }
 
-string nameCard(char val)
+vector<int> doShuffles(vector<int> temp, vector<int> now, vector<int> shuff)
 {
-  if (val == '2')
-    return "2";
-  if (val == '3')
-    return "3";
-  if (val == '4')
-    return "4";
-  if (val == '5')
-    return "5";
-  if (val == '6')
-    return "6";
-  if (val == '7')
-    return "7";
-  if (val == '8')
-    return "8";
-  if (val == '9')
-    return "9";
-  if (val == 'T')
-    return "10";
-  if (val == 'J')
-    return "Jack";
-  if (val == 'Q')
-    return "Queen";
-  if (val == 'K')
-    return "King";
-  if (val == 'A')
-    return "Ace";
-}
+	int i;
+	iter(i, 0, 52, 1)
+	{
+		now.at(i) = temp.at(shuff.at(i) - 1);
+	}
 
-string nameSuit(char val)
-{
-  if (val == 'H')
-    return "Hearts";
-  if (val == 'S')
-    return "Spades";
-  if (val == 'D')
-    return "Diamonds";
-  if (val == 'C')
-    return "Clubs";
-}
-
-vector<int> doShuffles(vector<int> s, vector<vector<int>> &sh)
-{
-  vector<int> ans(52), now;
-  int i, j, k, pos, shuff, card;
-  iter(i, 0, 52, 1)
-      now.push_back(i + 1);
-
-  cout << "here" << endl;
-  iter(i, 0, s.size(), 1)
-  {
-    shuff = s[i];
-    iter(j, 0, 52, 1)
-    {
-      card = sh.at(shuff - 1).at(j);
-      ans.at(j) = card;
-    }
-    iter(k, 0, 52, 1)
-    {
-      //cout << now.at(k) << ' ';
-      //pos = now.at(k);
-      now.at(k) = ans.at(now.at(k) - 1);
-      //cout << now.at(k) << ' ';
-      //cout << ans.at(k) << endl;
-    }
-    //ans.clear();
-  }
-  return now;
+	cout << now.at(i) << endl;
+	return now;
 }
 
 int main()
 {
-  map<int, string> deckMap = mountDeck();
-  vector<int> ans, now;
+	map<int, string> deckMap = mountDeck();
+	vector<int> ans, now;
+	vector<vector<int>> shuffles;
 
-  int testCases;
-  int card, i;
+	int testCases;
+	int card, i, shf;
+	string line, Card;
 
-  cin >> testCases;
-  while (testCases--)
-  {
-    int shf;
-    cin >> shf;
-    vector<vector<int>> shuffles;
+	iter(i, 0, 52, 1) now.push_back(i + 1);
 
-    int c = shf;
-    while (c--)
-    {
-      iter(i, 0, 52, 1)
-      {
-        cin >> card;
-        ans.push_back(card);
-      }
-      shuffles.push_back(ans);
-      ans.clear();
-    }
-    vector<int> shufSeq;
-    string linha;
-    i = 0;
-    while (getline(cin, linha) && !linha.empty())
-      shufSeq.push_back(stoi(linha));
+	cin >> testCases;
+	while (testCases--)
+	{
+		cin >> shf;
 
-    cout << "here" << endl;
-    now = doShuffles(shufSeq, shuffles);
+		int c = shf;
+		while (c--)
+		{
+			iter(i, 0, 52, 1)
+			{
+				cin >> card;
+				ans.push_back(card);
+			}
+			shuffles.push_back(ans);
+			ans.clear();
+		}
+		cin.ignore();
+		getline(cin, line);
+		while (!line.empty())
+		{
+			now = doShuffles(now, now, shuffles.at(std::stoi(line) - 1));
+			getline(cin, line);
+		}
 
-    string card;
-    iter(i, 0, 52, 1)
-    {
-      card = deckMap[now[i]];
-      printf("%s of %s\n", nameCard(card[1]).c_str(), nameSuit(card[0]).c_str());
-    }
-    cout << endl;
-    iter(i, 0, shuffles.size(), 1) shuffles[i].clear();
-    shuffles.clear();
-  }
+		iter(i, 0, 52, 1)
+		{
+			Card = deckMap[now[i]];
+			//printf("%s\n", Card.c_str());
+		}
+		cout << endl;
+		//iter(i, 0, shuffles.size(), 1) shuffles[i].clear();
+		//shuffles.clear();
+		now.clear();
+		ans.clear();
+		shuffles.clear();
+	}
 }

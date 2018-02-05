@@ -7,6 +7,11 @@
         "vector": "cpp",
         "xiosbase": "cpp",
         "xstring": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "map": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "xutility": "cpp",
+        "ostream": "cpp"
     }
 }
