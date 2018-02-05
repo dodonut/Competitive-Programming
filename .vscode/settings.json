@@ -1,17 +1,3 @@
 {
-    "files.associations": {
-        "iostream": "cpp",
-        "deque": "cpp",
-        "ios": "cpp",
-        "system_error": "cpp",
-        "vector": "cpp",
-        "xiosbase": "cpp",
-        "xstring": "cpp",
-        "xtree": "cpp",
-        "map": "cpp",
-        "queue": "cpp",
-        "stack": "cpp",
-        "xutility": "cpp",
-        "ostream": "cpp"
-    }
+    "C_Cpp.intelliSenseEngineFallback": "Enabled"
 }
