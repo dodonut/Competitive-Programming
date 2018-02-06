@@ -17,6 +17,7 @@ int main()
 			mapDeck[counter++] = names[j] + " of " + suits[i];
 		}
 	}
+	counter = 0;
 	int deckShuffles[102][52];
 	int deck[52], tempDeck[52];
 	string line;
@@ -25,6 +26,10 @@ int main()
 	cin >> T;
 	while (T--)
 	{
+		if (counter > 0)
+			cout << endl;
+
+		counter++;
 		for (int i = 0; i < 52; i++)
 			deck[i] = i + 1;
 
@@ -47,7 +52,6 @@ int main()
 		}
 
 		for (int i = 0; i < 52; i++)
-			printf("%s\n", i, mapDeck[deck[i] - 1].c_str());
-		cout << endl;
+			cout << mapDeck[deck[i] - 1] << endl;
 	}
 }
