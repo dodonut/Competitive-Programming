@@ -19,7 +19,7 @@ int main()
 {
   int T, X, Y, c = 1, takeout;
   string card;
-  std::list<string> deck, pile;
+  std::list<string> pile, tempPile, discard;
   std::list<string>::iterator it;
   cin >> T;
   while (T--)
@@ -28,31 +28,34 @@ int main()
     for (int i = 0; i < 52; i++)
     {
       cin >> card;
-      deck.insert(deck.begin(), card);
+      pile.insert(pile.begin(), card);
     }
+    it = pile.begin();
+    std::advance(it, 25);
+    tempPile.splice(tempPile.begin(), pile, pile.begin(), it);
     for (int i = 0; i < 3; i++)
     {
-      card = deck.front();
-      deck.pop_front();
+      card = pile.front();
+      tempPile.pop_front();
 
       X = cardValue(card[0]);
-      it = deck.begin();
-      std::advance(it, 10 - X);
+      it = pile.begin();
+      std::advance(it, 11 - X);
 
       Y += X;
-      pile.splice(pile.begin(), deck, deck.begin(), it);
+      discard.splice(discard.begin(), pile, pile.begin(), it);
       //pile.reverse();
       //pile.insert(pile.begin(), card);
     }
-    cout << "Y: " << Y << endl;
-    for (it = deck.begin(); it != deck.end(); ++it)
-      cout << *it << ' ';
-    it = deck.begin();
-    std::advance(it, Y);
+
+    pile.splice(pile.begin(), tempPile, tempPile.begin(), tempPile.end());
+    it = pile.begin();
+    std::advance(it, pile.size() - Y);
+
     printf("Case %d: %s\n", c++, (*it).c_str());
 
     Y = 0;
-    deck.clear();
+    pile.clear();
     pile.clear();
   }
 }

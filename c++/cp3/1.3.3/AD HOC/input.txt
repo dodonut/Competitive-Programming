@@ -1,5 +1,49 @@
 2
-AC KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C AD KD QD JD TD 9D 8D 7D 6D 5D 4D 3D 2D AH KH
-QH JH TH 9H 8H 7H 6H 5H 4H 3H 2H AS KS QS JS TS 9S 8S 7S 6S 5S 4S 3S 2S
-AC KC QC JC TC 9C 8C 7C 6C 5C 4C 3C 2C AD KD QD JD TD 9D 8D 7D 6D 5D 4D 3D 2D AH KH
-QH JH TH 9H 8H 7H 6H 5H 4H 3H 2H AS KS QS JS TS 9S 8S 7S 6S 5S 4S 3S 2S
+4
+ace of spades
+eight of diamonds
+fool
+twenty-one of trumps
+42
+ace of diamonds
+ace of hearts
+eight of clubs
+eight of diamonds
+eight of spades
+eight of trumps
+eleven of trumps
+five of clubs
+five of diamonds
+four of clubs
+four of spades
+four of trumps
+fourteen of trumps
+jack of clubs
+jack of hearts
+jack of spades
+king of clubs
+king of hearts
+knight of clubs
+knight of diamonds
+knight of hearts
+nine of diamonds
+nineteen of trumps
+one of trumps
+queen of clubs
+queen of diamonds
+queen of spades
+seven of spades
+seven of trumps
+six of clubs
+six of hearts
+six of trumps
+sixteen of trumps
+ten of clubs
+ten of diamonds
+three of clubs
+three of diamonds
+three of hearts
+three of spades
+three of trumps
+two of diamonds
+two of spades
