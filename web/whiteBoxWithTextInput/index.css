@@ -2,7 +2,7 @@
   position: absolute;
   width: 300px;
   height: 280px;
-  top: 25%;
+  top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: #fff;
@@ -14,12 +14,16 @@ body {
 .groupUserIcon {
   position: relative;
   top: 50%;
-  left: 17%;
 }
 
 .groupPassIcon {
   position: relative;
   top: 60%;
-  left: 17%;
 }
+
+.txtSize {
+  width: 84%;
+  margin-left: 6%;
+}
+
 
