@@ -1,0 +1,25 @@
+.mainwindow {
+  position: absolute;
+  width: 300px;
+  height: 280px;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+}
+body {
+  background: #e0e0eb;
+}
+
+.groupUserIcon {
+  position: relative;
+  top: 50%;
+  left: 17%;
+}
+
+.groupPassIcon {
+  position: relative;
+  top: 60%;
+  left: 17%;
+}
+

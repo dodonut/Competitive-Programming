@@ -8,20 +8,26 @@ bool myfunction(int i, int j) { return (i > j); }
 
 int worstCase(int *cards)
 {
-  int result = 0;
-  for (int i = 1; i < 3; i++)
+  int temp = 0;
+  if (cards[1] < cards[3])
   {
-    for (int j = 3; j < 5; j++)
-    {
-      if (cards[i] > cards[j])
-        result--;
-      else
-        result++;
-    }
+    if (cards[0] < cards[3])
+      temp = 1;
+    else
+      temp = cards[1] + 1;
   }
-  if (result < 0)
-    return -1;
-  return cards[1] + 1;
+  else
+  {
+    if (cards[0] > cards[4])
+      temp = -1;
+    else
+      temp = cards[0] + 1;
+  }
+  while (temp == cards[3] || temp == cards[4] || temp == cards[0] || temp == cards[1] || temp == cards[2])
+    temp++;
+  if (temp == 53)
+    temp = -1;
+  return temp;
 }
 
 int main()
