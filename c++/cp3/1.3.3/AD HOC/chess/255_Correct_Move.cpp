@@ -11,30 +11,58 @@ bool istate(int kp, int qp)
 
 bool imove(int kp, int qp, int qm)
 {
-    int lowh = ((qm % 8) + 1) * 8;
+    int lowh = (qp / 8) * 8;
     int highh = lowh + 7;
-    int lowv = qp / 8;
-    int highv = 63;
-    if (qm == kp)
+    int lowv = qp % 8;
+    int highv = 56 + lowv;
+    if (qm == qp)
         return true;
-    for (int i = lowh; i < highh; i++)
+
+    if (abs(qm - qp) % 8 == 0)
     {
-        if (i == qm)
-            return false;
+        if (qm < qp)
+        {
+            for (int i = qp; i >= lowv; i -= 8)
+            {
+                if (i == kp)
+                    return true;
+                if (i == qm)
+                    return false;
+            }
+        }
+        else
+        {
+            for (int i = qp; i <= highv; i += 8)
+            {
+                if (i == kp)
+                    return true;
+                if (i == qm)
+                    return false;
+            }
+        }
     }
-    for (int i = qm; i > lowv; i -= 8)
+    else if (abs(qm - qp) < 8)
     {
-        if (i == qm)
-            return false;
-        if (i == kp)
-            return true;
-    }
-    for (int i = qm; i < highv; i += 8)
-    {
-        if (i == qm)
-            return false;
-        if (i == kp)
-            return false;
+        if (qm < qp)
+        {
+            for (int i = qp; i >= lowh; i--)
+            {
+                if (i == kp)
+                    return true;
+                if (i == qm)
+                    return false;
+            }
+        }
+        else
+        {
+            for (int i = qp; i <= highh; i++)
+            {
+                if (i == kp)
+                    return true;
+                if (i == qm)
+                    return false;
+            }
+        }
     }
     return true;
 }
@@ -53,10 +81,11 @@ bool moveNotAllowed(int kp, int qp, int qm)
 
 bool stop(int kp, int qp, int qm)
 {
+    if (kp != 0 && kp != 56 && kp != 63 && kp != 7)
+        return false;
     int dif = abs(kp - qm);
     if (dif == 7 || dif == 9)
         return true;
-    return false;
 }
 
 string verify(int kp, int qp, int qm)
