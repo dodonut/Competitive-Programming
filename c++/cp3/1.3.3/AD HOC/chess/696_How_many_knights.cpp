@@ -16,13 +16,10 @@ int knights(int rows, int col)
     switch (r)
     {
     case 1:
-      return d * 4 + 1;
+      return d * 4 + 2;
     case 2:
-      return d * 4 + 3;
     case 3:
       return d * 4 + 4;
-    case 0:
-      return d * 4;
     }
   }
   return ceil((float)(rows * col) / 2);
