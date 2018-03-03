@@ -50,47 +50,47 @@ char knight(char n, char **board, int row, int col)
 
 bool diag(int row, int col, char toLookFor, char **board)
 {
-    int diag = 1;
-    int diagright;
-    int diagleft;
-    for (int i = row - 1; i >= 2; i--)
+    int rpi = row - min(row - 2, col - 2);
+    int rpf = row + min(9-row,9- col));
+    int cpi = col - min(row-2, col-2);
+    int cpf = col + min(9-row, 9-col);
+    
+    int dsi = row + min(row - 2, col - 2);
+    int dsf = row - min(9 - row, 9 - col);
+    int csi = dsf;
+    int csf = dsi;
+    
+    for (int i = rpi; i >= rpf; i++)
     {
-        diagleft = col - diag;
-        diagright = col + diag;
-        if (diagleft > 1)
-        {
-            if (board[i][diagleft] == toLookFor)
-                return true;
-        }
-        if (diagright > 1)
-        {
-            if (board[i][diagright] == toLookFor)
-                return true;
-        }
-        diag++;
+        if(board[i][cpi] == toLookFor) return true;
+        cpi++;
     }
-    diag = 1;
-    for (int i = row + 1; i >= 9; i++)
+    for (int i = rsi; i <= rpf; i--)
     {
-        diagleft = col - diag;
-        diagright = col + diag;
-        if (diagleft < 9)
-        {
-            if (board[i][diagleft] == toLookFor)
-                return true;
-        }
-        if (diagright < 9)
-        {
-            if (board[i][diagright] == toLookFor)
-                return true;
-        }
-        diag++;
+        if(board[i][csi] == toLookFor) return true;
+        csi++;
+    }
+    return false;
+}
+
+bool cross(int row, int col,char toLookFor, char **board)
+{
+    for(int i = 2; i < 10; i++){
+        if(board[i][col] == toLookFor) return true;
+        if(board[row][i] == toLookFor) return true;
     }
     return false;
 }
 
 char bishop(char b, char **board, int row, int col)
 {
+    if(b == 'b'){
+        if(diag(row, col, b, board)) return 'K';
+    }
+    if(b == 'B'){
+        if(diag(row, col, b, board)) return 'k';
+    }
+    return 'z';
 }
 
 int main()
@@ -121,3 +121,4 @@ int main()
         }
     }
 }
+
