@@ -48,77 +48,172 @@ char knight(char n, char **board, int row, int col)
     return 'z';
 }
 
-bool diag(int row, int col, char toLookFor, char **board)
+bool diag(int row, int col, char piece, char **board)
 {
-    int rpi = row - min(row - 2, col - 2);
-    int rpf = row + min(9-row,9- col));
-    int cpi = col - min(row-2, col-2);
-    int cpf = col + min(9-row, 9-col);
-    
-    int dsi = row + min(row - 2, col - 2);
-    int dsf = row - min(9 - row, 9 - col);
-    int csi = dsf;
-    int csf = dsi;
-    
-    for (int i = rpi; i >= rpf; i++)
+    char toLookFor = tolower(piece) == piece ? 'K' : 'k';
+
+    // int rpi = row - min(row - 2, col - 2);
+    // int rpf = row + min(9 - row, 9 - col);
+    // int cpi = col - min(row - 2, col - 2);
+    // int cpf = col + min(9 - row, 9 - col);
+
+    // int rsi = row + min(row - 2, col - 2);
+    // int rsf = row - min(9 - row, 9 - col);
+    // int csi = rsf;
+    // int csf = rsi;
+    int i = row - 1, j = col - 1;
+    for (; i >= 2 || j >= 2; i--, j--)
     {
-        if(board[i][cpi] == toLookFor) return true;
-        cpi++;
+        if (board[i][j] == toLookFor)
+            return true;
     }
-    for (int i = rsi; i <= rpf; i--)
+    i = row + 1;
+    j = col + 1;
+    for (; i <= 9 || j <= 9; i++, j++)
     {
-        if(board[i][csi] == toLookFor) return true;
-        csi++;
+        if (board[i][j] == toLookFor)
+            return true;
+    }
+    i = row + 1;
+    j = col - 1;
+    for (; i >= 2 || j >= 2; i++, j--)
+    {
+        if (board[i][j] == toLookFor)
+            return true;
+    }
+    i = row - 1;
+    j = col + 1;
+    for (; i <= 9 || j <= 9; i--, j++)
+    {
+        if (board[i][j] == toLookFor)
+            return true;
     }
     return false;
 }
 
-bool cross(int row, int col,char toLookFor, char **board)
+bool cross(int row, int col, char piece, char **board)
 {
-    for(int i = 2; i < 10; i++){
-        if(board[i][col] == toLookFor) return true;
-        if(board[row][i] == toLookFor) return true;
+    char toLookFor = tolower(piece) == piece ? 'K' : 'k';
+    for (int i = col - 1; i >= 2 || board[row][i] != '.'; i--)
+    {
+        if (board[row][i] == toLookFor)
+            return true;
+    }
+    for (int i = col + 1; i <= 9 || board[row][i] != '.'; i++)
+    {
+        if (board[row][i] == toLookFor)
+            return true;
+    }
+    for (int i = row - 1; i >= 2 || board[row][i] != '.'; i--)
+    {
+        if (board[i][col] == toLookFor)
+            return true;
+    }
+    for (int i = row + 1; i <= 9 || board[row][i] != '.'; i++)
+    {
+        if (board[i][col] == toLookFor)
+            return true;
     }
     return false;
 }
 
 char bishop(char b, char **board, int row, int col)
 {
-    if(b == 'b'){
-        if(diag(row, col, b, board)) return 'K';
-    }
-    if(b == 'B'){
-        if(diag(row, col, b, board)) return 'k';
-    }
+
+    if (diag(row, col, b, board))
+        return b == 'k' ? 'K' : 'k';
     return 'z';
+}
+
+char rook(char r, char **board, int row, int col)
+{
+    if (cross(row, col, r, board))
+        return r == 'k' ? 'K' : 'k';
+    return 'z';
+}
+
+char queen(char q, char **board, int row, int col)
+{
+    if (diag(row, col, q, board) || cross(row, col, q, board))
+        return q == 'q' ? 'K' : 'k';
+    return 'z';
+}
+
+char which(char piece, char **board, int row, int col)
+{
+    switch (piece)
+    {
+    case 'p':
+    case 'P':
+        return pawn(piece, board, row, col);
+    case 'b':
+    case 'B':
+        return bishop(piece, board, row, col);
+    case 'r':
+    case 'R':
+        return rook(piece, board, row, col);
+    case 'n':
+    case 'N':
+        return knight(piece, board, row, col);
+    case 'q':
+    case 'Q':
+        return queen(piece, board, row, col);
+    case 'k':
+    case 'K':
+        return 'z';
+    }
 }
 
 int main()
 {
-    char **board = new char[12];
+    char **board = new char *[12];
     for (int i = 0; i < 12; i++)
         board[i] = new char[12];
-    int i = 2, j = 2;
+    int i = 2, j = 2, cont = 1;
     char temp;
     char check;
+    bool wcheck, bcheck;
     while (cin >> temp)
     {
         board[i][j] = temp;
         j++;
         if (j == 10)
+        {
             i++;
+            j = 2;
+        }
         if (i == 10)
         {
+            wcheck = false;
+            bcheck = false;
             i = 2;
             j = 2;
+            temp = 'a';
             for (int k = 2; k < 10; k++)
             {
                 for (int l = 2; l < 10; l++)
                 {
-                    if (board[i][j] != '.')
+                    if (board[k][l] != '.')
+                    {
+                        temp = which(board[k][l], board, k, l);
+                        if (temp == 'k')
+                            wcheck = true;
+                        else if (temp == 'K')
+                            bcheck = true;
+                    }
                 }
+            }
+            if (temp != 'a')
+            {
+                printf("Game #%d: ", cont++);
+                if (wcheck)
+                    printf("white");
+                else if (bcheck)
+                    printf("black");
+                else
+                    printf("no");
+                printf(" is in check.\n");
             }
         }
     }
 }
-
