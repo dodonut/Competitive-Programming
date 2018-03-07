@@ -51,42 +51,40 @@ char knight(char n, char **board, int row, int col)
 bool diag(int row, int col, char piece, char **board)
 {
     char toLookFor = tolower(piece) == piece ? 'K' : 'k';
-
-    // int rpi = row - min(row - 2, col - 2);
-    // int rpf = row + min(9 - row, 9 - col);
-    // int cpi = col - min(row - 2, col - 2);
-    // int cpf = col + min(9 - row, 9 - col);
-
-    // int rsi = row + min(row - 2, col - 2);
-    // int rsf = row - min(9 - row, 9 - col);
-    // int csi = rsf;
-    // int csf = rsi;
     int i = row - 1, j = col - 1;
-    for (; i >= 2 || j >= 2; i--, j--)
+    for (; i >= 2 && j >= 2; i--, j--)
     {
         if (board[i][j] == toLookFor)
             return true;
+        if (board[i][j] != '.')
+            break;
     }
     i = row + 1;
     j = col + 1;
-    for (; i <= 9 || j <= 9; i++, j++)
+    for (; i <= 9 && j <= 9; i++, j++)
     {
         if (board[i][j] == toLookFor)
             return true;
+        if (board[i][j] != '.')
+            break;
     }
     i = row + 1;
     j = col - 1;
-    for (; i >= 2 || j >= 2; i++, j--)
+    for (; i <= 9 && j >= 2; i++, j--)
     {
         if (board[i][j] == toLookFor)
             return true;
+        if (board[i][j] != '.')
+            break;
     }
     i = row - 1;
     j = col + 1;
-    for (; i <= 9 || j <= 9; i--, j++)
+    for (; i >= 2 && j <= 9; i--, j++)
     {
         if (board[i][j] == toLookFor)
             return true;
+        if (board[i][j] != '.')
+            break;
     }
     return false;
 }
@@ -94,25 +92,33 @@ bool diag(int row, int col, char piece, char **board)
 bool cross(int row, int col, char piece, char **board)
 {
     char toLookFor = tolower(piece) == piece ? 'K' : 'k';
-    for (int i = col - 1; i >= 2 || board[row][i] != '.'; i--)
+    for (int i = col - 1; i >= 2; i--)
     {
         if (board[row][i] == toLookFor)
             return true;
+        if (board[row][i] != '.')
+            break;
     }
-    for (int i = col + 1; i <= 9 || board[row][i] != '.'; i++)
+    for (int i = col + 1; i <= 9; i++)
     {
         if (board[row][i] == toLookFor)
             return true;
+        if (board[row][i] != '.')
+            break;
     }
-    for (int i = row - 1; i >= 2 || board[row][i] != '.'; i--)
+    for (int i = row - 1; i >= 2; i--)
     {
         if (board[i][col] == toLookFor)
             return true;
+        if (board[i][col] != '.')
+            break;
     }
-    for (int i = row + 1; i <= 9 || board[row][i] != '.'; i++)
+    for (int i = row + 1; i <= 9; i++)
     {
         if (board[i][col] == toLookFor)
             return true;
+        if (board[i][col] != '.')
+            break;
     }
     return false;
 }
@@ -121,14 +127,14 @@ char bishop(char b, char **board, int row, int col)
 {
 
     if (diag(row, col, b, board))
-        return b == 'k' ? 'K' : 'k';
+        return b == 'b' ? 'K' : 'k';
     return 'z';
 }
 
 char rook(char r, char **board, int row, int col)
 {
     if (cross(row, col, r, board))
-        return r == 'k' ? 'K' : 'k';
+        return r == 'r' ? 'K' : 'k';
     return 'z';
 }
 
@@ -197,9 +203,9 @@ int main()
                     {
                         temp = which(board[k][l], board, k, l);
                         if (temp == 'k')
-                            wcheck = true;
-                        else if (temp == 'K')
                             bcheck = true;
+                        else if (temp == 'K')
+                            wcheck = true;
                     }
                 }
             }
@@ -212,7 +218,7 @@ int main()
                     printf("black");
                 else
                     printf("no");
-                printf(" is in check.\n");
+                printf(" king is in check.\n");
             }
         }
     }
