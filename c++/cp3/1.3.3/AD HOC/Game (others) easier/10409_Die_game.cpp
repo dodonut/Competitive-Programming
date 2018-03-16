@@ -3,39 +3,53 @@
 #include <map>
 int main()
 {
-    int vert[4]{1, 2, 6, 5}, hor[4]{4, 6, 3, 1};
-    int T, iv, ih;
-    int *res = new int();
+    std::map<std::string, int> vet, vetaux;
+    vetaux = vet;
+    int T;
     char a[6];
     std::string word;
     while (scanf("%d", &T) && T)
     {
-        iv = 0; ih = 0;
+        vet["top"] = 1;
+        vet["bottom"] = 6;
+        vet["left"] = 3;
+        vet["right"] = 4;
+        vet["up"] = 2;
+        vet["down"] = 5;
         while (T--)
         {
+            vetaux = vet;
             scanf(" %s", &a);
             word = a;
             if (word == "north")
             {
-                iv = (iv + 3) % 4;
-                res = vert + iv;
+                vet["top"] = vetaux["down"];
+                vet["up"] = vetaux["top"];
+                vet["bottom"] = vetaux["up"];
+                vet["down"] = vetaux["bottom"];
             }
             else if (word == "south")
             {
-                iv = (iv + 1) % 4;
-                res = vert + iv;
+                vet["top"] = vetaux["up"];
+                vet["up"] = vetaux["bottom"];
+                vet["bottom"] = vetaux["down"];
+                vet["down"] = vetaux["top"];
             }
             else if (word == "west")
             {
-                ih = (ih + 3) % 4;
-                res = hor + ih;
+                vet["left"] = vetaux["top"];
+                vet["top"] = vetaux["right"];
+                vet["right"] = vetaux["bottom"];
+                vet["bottom"] = vetaux["left"];
             }
             else
             {
-                ih = (ih + 1) % 4;
-                res = hor + ih;
+                vet["left"] = vetaux["bottom"];
+                vet["top"] = vetaux["left"];
+                vet["right"] = vetaux["top"];
+                vet["bottom"] = vetaux["right"];
             }
         }
-        printf("%d\n", *res);
+        printf("%d\n", vet["top"]);
     }
 }
