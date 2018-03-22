@@ -4,85 +4,55 @@
   Found a bug on the problem statement, the rebound turn 90 degrees LEFT, not right
   according to the input/output example and udebug tests
 */
-std::vector<std::vector<int>> bumpers;
-void move(int &x, int &y, int dir)
-{
-  switch (dir)
-  {
-  case 0:
-    x--;
-    break;
-  case 1:
-    y++;
-    break;
-  case 2:
-    x++;
-    break;
-  case 3:
-    y--;
-    break;
-  }
-}
-
-int isbumper(int x, int y)
-{
-  for (int i = 0; i < bumpers.size(); i++)
-  {
-    int x = bumpers[i][0];
-    int y = bumpers[i][1];
-    if (bumpers[i][0] == x && bumpers[i][1] == y)
-      return i;
-  }
-  return -1;
-}
-
-bool iswall(int x, int y, int m, int n)
-{
-  if (x == 1 || x == m || y == 1 || y == n)
-    return true;
-  return false;
-}
 
 int main()
 {
+  bool hasBumber[55][55];
+  int xChange[]{1, 0, -1, 0};
+  int yChange[]{0, 1, -1, 0};
+
+  int bumpScore[55][55];
+  int bumpCost[55][55];
+  for (int i = 0; i < 55; i++)
+    for (int j = 0; j < 55; j++)
+      hasBumber[i][j] = false;
+
   int m, n, wallcost, p, tp, i;
   scanf("%d %d %d %d", &m, &n, &wallcost, &p);
-  std::vector<int> bumper(4);
+  int x, y, score, cost, lifetime, dir;
   for (i = 0; i < p; i++)
   {
-    scanf("%d %d %d %d", &bumper[0], &bumper[1], &bumper[2], &bumper[3]);
-    bumpers.push_back(bumper);
+    scanf("%d %d %d %d", &x, &y, &score, &cost);
+    hasBumber[x][y] = true;
+    bumpScore[x][y] = score;
+    bumpCost[x][y] = cost;
   }
 
-  int ball[4];
-  int previous = 0;
   int ballPoints = 0;
-  int bumpLoc = 0;
   int totalPoints = 0;
-  while (scanf("%d %d %d %d", &ball[0], &ball[1], &ball[2], &ball[3]) == 4)
+  int newx, newy;
+  while (scanf("%d %d %d %d", &x, &y, &dir, &lifetime) == 4)
   {
     ballPoints = 0;
-    while (ball[3] > 1)
+    while (--lifetime > 0)
     {
-      int tempx = ball[0], tempy = ball[1];
-      move(ball[0], ball[1], ball[2]);
-      ball[3]--;
-      ballPoints += previous;
-      int bumpLoc = isbumper(ball[0], ball[1]);
-      if (bumpLoc != -1)
+      newx = x + xChange[dir];
+      newy = y + yChange[dir];
+      if (newx <= 1 || newx >= m || newy <= 1 || newy >= n)
       {
-        ball[0] = tempx;
-        ball[1] = tempy;
-        ball[3] -= bumpers[bumpLoc][3];
-        previous = bumpers[bumpLoc][2];
-        ball[2] = (ball[2] + 3) % 4;
+        lifetime -= wallcost;
+        dir = (dir + 3) % 4;
       }
-      else if (iswall(ball[0], ball[1], m, n))
+      else if (hasBumber[newx][newy])
       {
-        ball[0] = tempx;
-        ball[1] = tempy;
-        ball[3] -= wallcost;
-        ball[2] = (ball[2] + 3) % 4;
+        lifetime -= bumpCost[newx][newy];
+        ballPoints += bumpScore[newx][newy];
+        dir = (dir + 3) % 4;
+      }
+      else
+      {
+        x = newx;
+        y = newy;
       }
     }
     printf("%d\n", ballPoints);
