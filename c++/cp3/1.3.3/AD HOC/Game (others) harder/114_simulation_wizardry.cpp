@@ -9,7 +9,7 @@ int main()
 {
   bool hasBumber[55][55];
   int xChange[]{1, 0, -1, 0};
-  int yChange[]{0, 1, -1, 0};
+  int yChange[]{0, 1, 0, -1};
 
   int bumpScore[55][55];
   int bumpCost[55][55];
