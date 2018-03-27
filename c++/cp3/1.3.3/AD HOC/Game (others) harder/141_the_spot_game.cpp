@@ -6,7 +6,7 @@ std::bitset<50 * 50> left[103], no[103], right[103], down[103];
 bool cmpM(int current)
 {
     for (int i = 0; i < current - 1; i++)
-        if (left[i] == left[current] || right[i] == right[current] || no[i] == no[current] || down[i] == down[current])
+        if (left[i] == left[current] || right[i] == right[current] || no[i] == no[current] || down[i] == down[current] || left[i] == no[current] || right[i] == no[current] || down[i] == no[current])
             return true;
 
     return false;
