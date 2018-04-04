@@ -1,6 +1,5 @@
 #include <iostream>
 #include <set>
-#include <vector>
 
 char **board;
 std::set<std::pair<std::pair<int, int>, std::pair<int, int>>> list;
@@ -16,7 +15,7 @@ void validBracket(int row, int col, int dirr, int dirc, char playerPiece) {
   int i = row + dirr, j = col + dirc;
   bool foundLookingFor = false, foundPlayerPiece = false;
   int lastPosX = -1, lastPosY = -1;
-  while (i >= 0 && i < 8 && j >= 0 && j < 8) { // inside board
+  while (i >= 1 && i < 9 && j >= 1 && j < 9) { // inside board
     if (board[i][j] == toLookFor)
       foundLookingFor = true;
     else if (board[i][j] == playerPiece && foundLookingFor) {
@@ -24,8 +23,8 @@ void validBracket(int row, int col, int dirr, int dirc, char playerPiece) {
       lastPosX = i;
       lastPosY = j;
     } else if (board[i][j] == '-' && foundLookingFor && foundPlayerPiece)
-      list.insert(std::make_pair(std::make_pair(row + 1, col + 1),
-                                 std::make_pair(lastPosX + 1, lastPosY + 1)));
+      list.insert(std::make_pair(std::make_pair(row, col),
+                                 std::make_pair(lastPosX, lastPosY)));
     else if (board[i][j] == '-')
       break;
     i += dirr;
@@ -34,10 +33,12 @@ void validBracket(int row, int col, int dirr, int dirc, char playerPiece) {
 }
 
 void getAllMoves(char playerPiece) {
-  std::pair<std::pair<int, int>, std::pair<int, int>> ppair;
   int i, j;
-  for (i = 0; i < 8; i++) {
-    for (j = 0; j < 8; j++) {
+  for (i = 1; i < 9; i++) {
+    for (j = 1; j < 9; j++) {
+      if (i == 2 && j == 5) {
+        int p = 0;
+      }
       if (board[i][j] == '-') {
         validBracket(i, j, 1, 0, playerPiece);   // vert down
         validBracket(i, j, -1, 0, playerPiece);  // vert up
@@ -79,7 +80,7 @@ void bracket(char pp, std::pair<int, int> from, std::pair<int, int> to) {
   std::pair<int, int> dir = loopTo(from, to);
   int i = dir.first, j = dir.second;
   int row = from.first, col = from.second;
-  while (row != to.first && col != to.second) {
+  while (row != to.first || col != to.second) {
     board[row][col] = pp;
     row += i;
     col += j;
@@ -100,29 +101,52 @@ int makeMove(int x, int y, char pp) {
   return 1;
 }
 
-void displayBoard() {}
+std::pair<int, int> howMany() {
+  int i, j;
+  std::pair<int, int> pieces;
+  for (i = 1; i < 9; i++) {
+    for (j = 1; j < 9; j++) {
+      if (board[i][j] == 'B')
+        pieces.first++;
+      else if (board[i][j] == 'W')
+        pieces.second++;
+    }
+  }
+  return pieces;
+}
+
+void displayBoard() {
+  int i, j;
+  for (i = 1; i < 9; i++) {
+    for (j = 1; j < 9; j++) {
+      printf("%c", board[i][j]);
+    }
+    printf("\n");
+  }
+}
+
+char switchPlayer(char actualPlayer) { return actualPlayer == 'B' ? 'W' : 'B'; }
 
 int main() {
-  int N, i, j, cont, player;
+  int N, i, j, cont;
   char cmd;
   std::set<std::pair<int, int>> setPairs;
-  board = new char *[8];
-  for (i = 0; i < 8; i++)
-    board[i] = new char[8];
-  char ch, playerPiece;
+  std::pair<int, int> pieces;
+  board = new char *[10];
+  for (i = 0; i < 10; i++)
+    board[i] = new char[10];
+  char playerPiece;
   scanf("%d", &N);
   while (N--) {
-    for (i = 0; i < 8; i++)
-      for (j = 0; j < 8; j++)
+    for (i = 1; i < 9; i++)
+      for (j = 1; j < 9; j++)
         scanf(" %c", &board[i][j]);
 
-    scanf(" %c", &ch);
-    player = ch == 'B' ? 0 : 1;
-    getAllMoves(playerPiece);
+    scanf(" %c", &playerPiece);
     while (scanf(" %c", &cmd)) {
       cont = 0;
-      playerPiece = player == 0 ? 'B' : 'W';
       if (cmd == 'L') {
+        getAllMoves(playerPiece);
         if (!list.empty()) {
           for (auto &&xx : list)
             setPairs.insert(xx.first);
@@ -134,26 +158,32 @@ int main() {
           }
         } else
           printf("No legal move.");
-        printf("\n");
       } else if (cmd == 'M') {
         char r, c;
         int ans;
         scanf(" %c %c", &r, &c);
         ans = makeMove(r - '0', c - '0', playerPiece);
         if (!ans) { // movement not allowed
-          player = (player + 1) % 2;
-          playerPiece = player == 0 ? 'B' : 'W';
+          playerPiece = switchPlayer(playerPiece);
+          list.clear();
+          char c = board[2][4];
+          setPairs.clear();
           getAllMoves(playerPiece);
-          board[r - '0'][r - '0'] = playerPiece;
+          board[r - '0'][c - '0'] = playerPiece;
           makeMove(r - '0', c - '0', playerPiece);
         }
+        playerPiece = switchPlayer(playerPiece);
+        pieces = howMany();
+        printf("Black - %2d White - %2d", pieces.first, pieces.second);
+        list.clear();
+        setPairs.clear();
       } else {
         displayBoard();
         break;
       }
+      printf("\n");
     }
     list.clear();
     setPairs.clear();
   }
-  printf("Quiting....");
 }
