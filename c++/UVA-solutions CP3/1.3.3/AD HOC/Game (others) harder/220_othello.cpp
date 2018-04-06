@@ -1,6 +1,11 @@
 #include <iostream>
 #include <set>
 
+/*
+  It has to bracket until it finds the fisrt occcurence of my piece, got that
+  wrong from the problem statement, or the PS is wrong.... anyway.
+*/
+
 char **board;
 std::set<std::pair<std::pair<int, int>, std::pair<int, int>>> list;
 std::set<std::pair<int, int>> setPairs;
@@ -48,7 +53,7 @@ void validBracket(int row, int col, int dirr, int dirc, char playerPiece)
     foundLookingFor = true;
 
   while (i >= 1 && i < 9 && j >= 1 && j < 9 &&
-         foundLookingFor)
+         foundLookingFor && lastPosX == -1)
   { // inside board
     if (board[i][j] == playerPiece)
     {
