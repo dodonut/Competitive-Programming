@@ -1,8 +1,7 @@
 #include <iostream>
 #include <vector>
-using std::vector;
 
-void makeMove(vector<vector<char>> &board, int &blankX, int &blankY, char move)
+void makeMove(char **board, int &blankX, int &blankY, char move)
 {
     if (move == 'A')
     {
@@ -26,30 +25,40 @@ void makeMove(vector<vector<char>> &board, int &blankX, int &blankY, char move)
     }
 }
 
-bool legalMove(vector<vector<char>> board, int blankX, int blankY, char move)
+bool legalMove(char **board, int blankX, int blankY, char move)
 {
     char temp;
     if (move != 'A' && move != 'B' && move != 'L' && move != 'R')
         return false;
 
     if (move == 'A')
+    {
         if (blankX == 1)
             return false;
+    }
 
-        else if (move == 'B')
-            if (blankX == 5)
-                return false;
+    else if (move == 'B')
+    {
+        if (blankX == 5)
+            return false;
+    }
 
-            else if (move == 'L')
-                if (blankY == 1)
-                    return false;
+    else if (move == 'L')
+    {
+        if (blankY == 1)
+            return false;
+    }
 
-                else if (blankY == 5)
-                    return false;
+    else
+    {
+        if (blankY == 5)
+            return false;
+    }
+
     return true;
 }
 
-void printBoard(vector<vector<char>> board)
+void printBoard(char **board)
 {
     int i, j;
     for (i = 1; i < 6; i++)
@@ -71,7 +80,10 @@ int main()
     char bconfig;
     int i = 1, j = 1, c = 1;
     int ib, jb;
-    vector<vector<char>> board(7, vector<char>(7));
+    //vector<vector<char>> board(7, vector<char>(7));
+    char **board = new char *[8];
+    for (int x = 0; x < 8; x++)
+        board[x] = new char[8];
     while (scanf("%c", &bconfig) && bconfig != 'Z')
     {
         if (bconfig == '\n')
