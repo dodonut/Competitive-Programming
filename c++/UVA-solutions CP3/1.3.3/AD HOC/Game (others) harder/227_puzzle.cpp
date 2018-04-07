@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cstdio>
 
 void makeMove(char **board, int &blankX, int &blankY, char move)
 {
@@ -84,8 +85,11 @@ int main()
     char **board = new char *[8];
     for (int x = 0; x < 8; x++)
         board[x] = new char[8];
-    while (scanf("%c", &bconfig) && bconfig != 'Z')
+    while (true)
     {
+        bconfig = getchar();
+        if (bconfig == 'Z')
+            break;
         if (bconfig == '\n')
             continue;
         if (isspace(bconfig))
@@ -124,4 +128,5 @@ int main()
             //board.clear();
         }
     }
+    delete[] board;
 }
