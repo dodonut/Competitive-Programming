@@ -17,8 +17,10 @@ void mountElligible()
     int i = 1, j = 1;
     for (i = 1; i <= r; i++)
     {
+        for (j = 1; j <= c; j++)
         {
-            if (isElligible(i, j))
+            if (chart[i][j] != '*' && isElligible(i, j))
+            {
                 elligible[i][j] = cont++;
             }
         }
