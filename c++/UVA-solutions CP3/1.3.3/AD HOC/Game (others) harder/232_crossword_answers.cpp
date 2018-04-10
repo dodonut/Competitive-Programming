@@ -1,7 +1,7 @@
 #include <iostream>
 
-char chart[12][12] = {'*'};
-char elligible[12][12] = {'b'};
+char chart[12][12];
+int elligible[12][12];
 int r, c;
 
 bool isElligible(int row, int col)
@@ -13,47 +13,70 @@ bool isElligible(int row, int col)
 
 void mountElligible()
 {
-    int cont = 0;
+    int cont = 1;
     int i = 1, j = 1;
-    for (; i < r; i++)
-        for (; j < c; j++)
+    for (i = 1; i <= r; i++)
+    {
         {
             if (isElligible(i, j))
-                elligible[i][j] = cont + '0';
+                elligible[i][j] = cont++;
+            }
         }
+    }
 }
 
 void printAcross()
 {
-    int i = 1, j = 1;
-    for (; i < r; i++)
+    int i, j, cont = 1;
+    for (i = 1; i <= r; i++)
     {
-        for (; j < c; j++)
+        for (j = 1; j <= c; j++)
         {
-            if (elligible[i][j] != 'b')
-                printf("%c.", elligible[i][j]);
-            if (chart[i][j] == '*')
-                break;
-            else
-                printf("%c", chart[i][j]);
+            if (chart[i][j] != '*' && elligible[i][j] != 0)
+            {
+                printf("%3d.", elligible[i][j]);
+                while (chart[i][j] != '*')
+                {
+                    printf("%c", chart[i][j]);
+                    j++;
+                }
+                printf("\n");
+            }
         }
-        printf("\n");
     }
 }
 
 void printDown()
 {
-    int i = 1, j = 1;
-    for (; i < c; i++)
+    int i, j, cont = 1, tempi;
+    for (i = 1; i <= r; i++)
     {
-        for (; j < r; j++)
+        for (j = 1; j <= c; j++)
         {
-            if (elligible[j][i] != 'b')
-                printf("%3c.", elligible[j][i]);
-            if (chart[j][i] == '*')
-                break;
-            else
-                printf("%c", chart[j][i]);
+            if (chart[i][j] != '*' && elligible[i][j] != 0)
+            {
+                printf("%3d.", elligible[i][j]);
+                tempi = i;
+                while (chart[tempi][j] != '*')
+                {
+                    printf("%c", chart[tempi][j]);
+                    tempi++;
+                    elligible[tempi][j] = 0;
+                }
+                printf("\n");
+            }
+        }
+    }
+}
+
+void printMatrix(int m[][12])
+{
+    int i, j;
+    for (i = 0; i < 12; i++)
+    {
+        for (j = 0; j < 12; j++)
+        {
+            printf("%d", m[i][j]);
         }
         printf("\n");
     }
@@ -61,15 +84,24 @@ void printDown()
 
 int main()
 {
-    int i, j, cont = 0;
+    int i, j, cont = 1;
     char ch[12];
+    for (i = 0; i < 12; i++)
+    {
+        for (j = 0; j < 12; j++)
+        {
+            chart[i][j] = '*';
+            elligible[i][j] = 0;
+        }
+    }
+
     while (true)
     {
-        r = getchar();
+        scanf("%d", &r);
         if (r == 0)
             break;
-        c = getchar();
-        if (cont > 0)
+        scanf("%d", &c);
+        if (cont > 1)
             printf("\n");
         for (i = 0; i < r; i++)
         {
@@ -77,7 +109,6 @@ int main()
             for (j = 0; j < c; j++)
                 chart[i + 1][j + 1] = ch[j];
         }
-
         mountElligible();
         printf("puzzle #%d:\n", cont++);
         printf("Across\n");
