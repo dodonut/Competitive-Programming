@@ -71,31 +71,10 @@ void printDown()
     }
 }
 
-void printMatrix(int m[][12])
-{
-    int i, j;
-    for (i = 0; i < 12; i++)
-    {
-        for (j = 0; j < 12; j++)
-        {
-            printf("%d", m[i][j]);
-        }
-        printf("\n");
-    }
-}
-
 int main()
 {
     int i, j, cont = 1;
     char ch[12];
-    for (i = 0; i < 12; i++)
-    {
-        for (j = 0; j < 12; j++)
-        {
-            chart[i][j] = '*';
-            elligible[i][j] = 0;
-        }
-    }
 
     while (true)
     {
@@ -103,6 +82,14 @@ int main()
         if (r == 0)
             break;
         scanf("%d", &c);
+        for (i = 0; i < 12; i++)
+        {
+            for (j = 0; j < 12; j++)
+            {
+                chart[i][j] = '*';
+                elligible[i][j] = 0;
+            }
+        }
         if (cont > 1)
             printf("\n");
         for (i = 0; i < r; i++)
