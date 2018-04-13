@@ -51,7 +51,7 @@ void removeEmptyCol()
     int i, count = 1;
     for (i = 1; i <= N; i++)
     {
-        while (i <= N && m[M][i] == 0)
+        while (i <= N && m[1][i] == 0)
             i++;
         swapCol(i, count);
         count++;
@@ -73,6 +73,16 @@ void print()
         }
         printf("\n");
     }
+}
+
+bool won()
+{
+    int i, j;
+    for (i = 1; i <= M; i++)
+        for (j = 1; j <= N; j++)
+            if (m[i][j] != 0)
+                return false;
+    return true;
 }
 
 int main()
@@ -101,6 +111,9 @@ int main()
             }
         }
         printf("Grid %d.\n", cont++);
-        print();
+        if (won())
+            printf("    Game Won\n");
+        else
+            print();
     }
 }
