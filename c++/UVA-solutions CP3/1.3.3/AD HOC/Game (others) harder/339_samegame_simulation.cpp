@@ -1,40 +1,105 @@
 #include <iostream>
 
 int m[12][42];
+int M, N;
 
-void rm(int r, int c, int value){
-    if(m[r][c] == 0 || m[r][c] == value){
-        rm(r-)
+bool rm(int r, int c, int value)
+{
+    if (m[r][c] == value)
+    {
+        m[r][c] = 0;
+        rm(r - 1, c, value);
+        rm(r + 1, c, value);
+        rm(r, c - 1, value);
+        rm(r, c + 1, value);
+        return true;
+    }
+    return false;
+}
+
+bool Remove(int r, int c, int value)
+{
+    if (m[r][c] != 0)
+    {
+        if (rm(r - 1, c, value) || rm(r + 1, c, value) || rm(r, c - 1, value) || rm(r, c + 1, value))
+            return true;
+    }
+    return false;
+}
+
+void dropValues(int c)
+{
+    int i, count = M;
+    for (i = M; i >= 1; i--)
+    {
+        while (m[i][c] == 0)
+            i--;
+        std::swap(m[count][c], m[i][c]);
+        count--;
     }
 }
 
-bool Remove(int r, int c, int value){
+void swapCol(int c1, int c2)
+{
+    int i;
+    for (i = 1; i <= M; i++)
+        std::swap(m[i][c1], m[i][c2]);
+}
 
+void removeEmptyCol()
+{
+    int i, count = 1;
+    for (i = 1; i <= N; i++)
+    {
+        while (m[M][i] == 0)
+            i++;
+        swapCol(i, count);
+        count++;
+    }
+}
+
+void print()
+{
+    int i, j;
+    for (i = 1; i <= M; i++)
+    {
+        printf("   ");
+        for (j = 1; j <= N; j++)
+        {
+            if (m[i][j] == 0)
+                printf("  ");
+            else
+                printf(" %d", m[i][j]);
+        }
+        printf("\n");
+    }
 }
 
 int main()
 {
-    int M, N, i, j, r, c;
+    int i, j, r, c, cont = 1;
     while (scanf("%d %d", &M, &N), M && N)
     {
-        for (i = 1; i <= M; i++)
+        if (cont > 1)
+            printf("\n");
+        for (i = M; i >= 1; i--)
             for (j = 1; j <= N; j++)
-                scanf("%d", m[i][j]);
+                scanf("%d", &m[i][j]);
 
         while (scanf("%d %d", &r, &c), r)
         {
             if (Remove(r, c, m[r][c]))
             {
-                if (!moveRowElem(c))
-                {
-                    moveColElem(c);
-                    moveRowElem(c);
-                }
+                for (i = 1; i <= N; i++)
+                    dropValues(i);
+                removeEmptyCol();
             }
         }
+        printf("Grid %d.\n", cont++);
+        print();
 
         for (i = 0; i < 12; i++)
             for (j = 0; j < 42; j++)
-                m[i][j] = 0;
+                m[i][j] = -1;
     }
 }
