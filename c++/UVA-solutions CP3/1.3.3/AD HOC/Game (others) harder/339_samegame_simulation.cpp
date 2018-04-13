@@ -29,13 +29,13 @@ bool Remove(int r, int c, int value)
 
 void dropValues(int c)
 {
-    int i, count = M;
-    for (i = M; i >= 1; i--)
+    int i, count = 1;
+    for (i = 1; i <= M; i++)
     {
-        while (m[i][c] == 0)
-            i--;
+        while (i <= M && m[i][c] == 0)
+            i++;
         std::swap(m[count][c], m[i][c]);
-        count--;
+        count++;
     }
 }
 
@@ -51,7 +51,7 @@ void removeEmptyCol()
     int i, count = 1;
     for (i = 1; i <= N; i++)
     {
-        while (m[M][i] == 0)
+        while (i <= N && m[M][i] == 0)
             i++;
         swapCol(i, count);
         count++;
@@ -61,7 +61,7 @@ void removeEmptyCol()
 void print()
 {
     int i, j;
-    for (i = 1; i <= M; i++)
+    for (i = M; i >= 1; i--)
     {
         printf("   ");
         for (j = 1; j <= N; j++)
@@ -82,7 +82,12 @@ int main()
     {
         if (cont > 1)
             printf("\n");
-        for (i = M; i >= 1; i--)
+
+        for (i = 0; i < 12; i++)
+            for (j = 0; j < 42; j++)
+                m[i][j] = 0;
+
+        for (i = 1; i <= M; i++)
             for (j = 1; j <= N; j++)
                 scanf("%d", &m[i][j]);
 
@@ -97,9 +102,5 @@ int main()
         }
         printf("Grid %d.\n", cont++);
         print();
-
-        for (i = 0; i < 12; i++)
-            for (j = 0; j < 42; j++)
-                m[i][j] = -1;
     }
 }
