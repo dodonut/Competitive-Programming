@@ -49,6 +49,8 @@
         "xutility": "cpp",
         "xhash": "cpp",
         "unordered_set": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "cctype": "cpp",
+        "set": "cpp"
     }
 }
