@@ -1,13 +1,14 @@
+#include <algorithm>
 #include <iostream>
 #include <map>
 #include <vector>
-#include <algorithm>
 using std::map;
 using std::vector;
 
 struct Pos
 {
     int x, y;
+    Pos(){};
     Pos(int x, int y) : x(x), y(y) {}
 };
 
@@ -29,6 +30,8 @@ Pos greaterTarget(vector<Pos> targets)
     int i;
     for (i = 0; i < targets.size(); i++)
     {
+        if (targets[i].x < 1 || targets[i].x > 7 || targets[i].y < 1 || targets[i].y > 7)
+            continue;
         if (score[gtar.x][gtar.y] < score[targets[i].x][targets[i].y])
             gtar = targets[i];
     }
@@ -42,13 +45,14 @@ std::pair<Pos, Pos> bestSourceTarget(vector<Pos> source)
     int i, j;
     for (i = 0; i < source.size(); i++)
     {
-        gtar = greaterTarget(vector<Pos>{Pos(source[i].x - 2, source[i].y),
-                                         Pos(source[i].x + 2, source[i].y),
-                                         Pos(source[i].x, source[i].y - 2),
-                                         Pos(source[i].x, source[i].y + 2)});
+        gtar = greaterTarget({Pos(source[i].x - 2, source[i].y),
+                              Pos(source[i].x + 2, source[i].y),
+                              Pos(source[i].x, source[i].y - 2),
+                              Pos(source[i].x, source[i].y + 2)});
         all.push_back(std::make_pair(source[i], gtar));
     }
-    std::sort(all.begin(), all.end(), sourceTargetSort);
+    all.empty() ? all.push_back(std::make_pair(Pos(0, 0), Pos(0, 0))) : std::sort(all.begin(), all.end(), sourceTargetSort);
+    printf("all[%d]:Pos(%d,%d) val: %d\n", 0, all[0].second.x, all[0].second.y, score[all[0].second.x][all[0].second.y]);
     return all[0];
 }
 
@@ -59,7 +63,7 @@ bool validPeg(vector<vector<bool>> p, int x, int y)
     {
         dx = D[i][0];
         dy = D[i][1];
-        if ((x - dx * 2 < 3 || x + dx * 2 > 5) && (y + dy * 2 < 3 || y + dy * 2 > 5))
+        if ((x + dx * 2 < 3 || x + dx * 2 > 5) && (y + dy * 2 < 3 || y + dy * 2 > 5))
             continue;
         if (p[x + dx][y + dy] && !p[x + dx * 2][y + dy * 2])
             return true;
@@ -72,15 +76,15 @@ std::pair<Pos, Pos> pickPeg(vector<vector<bool>> p)
     int i, j;
     vector<Pos> source;
     vector<Pos> target;
-    for (i = 1; i <= xsize; i++)
+    for (i = 1; i <= 7; i++)
     {
-        for (j = 1; j <= ysize; j++)
+        for (j = 1; j <= 7; j++)
         {
-            if (validPeg(p, i, j))
+            if (p[i][j] && validPeg(p, i, j))
                 source.push_back(Pos(i, j));
         }
     }
-    if (!source.empty())
+    if (source.empty())
         return std::make_pair(Pos(0, 0), Pos(0, 0));
 
     return bestSourceTarget(source);
@@ -94,8 +98,8 @@ Pos median(Pos p1, Pos p2)
 int countRemaining(vector<vector<bool>> p)
 {
     int i, j, cont = 0;
-    for (i = 1; i <= xsize; i++)
-        for (j = 1; j <= ysize; j++)
+    for (i = 1; i <= 7; i++)
+        for (j = 1; j <= 7; j++)
             if (p[i][j])
                 cont += score[i][j];
 
@@ -108,9 +112,9 @@ int main()
     std::pair<Pos, Pos> toMove(Pos(0, 0), Pos(0, 0));
     Pos med(0, 0);
     scanf("%d", &N);
-    for (i = 1; i <= xsize; i++)
+    for (i = 1; i <= 7; i++)
     {
-        for (j = 1; j <= ysize; j++)
+        for (j = 1; j <= 7; j++)
         {
             if (!((i < 3 || i > 5) && (j < 3 || j > 5)))
             {
@@ -120,9 +124,9 @@ int main()
         }
     }
 
+    printf("HI Q OUTPUT\n");
     while (N--)
     {
-        printf("HI Q OUTPUT\n");
         vector<vector<bool>> pegs(xsize, vector<bool>(ysize, false));
         while (scanf("%d", &val), val)
             pegs[posMatrix[val].x][posMatrix[val].y] = true;
@@ -130,6 +134,7 @@ int main()
         toMove = pickPeg(pegs);
         while (toMove.first.x != 0)
         {
+            printf("tomove(Pos(%d,%d),Pos(%d,%d)) vals: %d valt: %d\n\n", toMove.first.x, toMove.first.y, toMove.second.x, toMove.second.y, score[toMove.first.x][toMove.first.y], score[toMove.second.x][toMove.second.y]);
             pegs[toMove.first.x][toMove.first.y] = false;
             med = median(toMove.first, toMove.second);
             pegs[med.x][med.y] = false;
@@ -137,6 +142,6 @@ int main()
             toMove = pickPeg(pegs);
         }
         printf("%d\n", countRemaining(pegs));
-        printf("END OF OUTPUT\n");
     }
+    printf("END OF OUTPUT\n");
 }
