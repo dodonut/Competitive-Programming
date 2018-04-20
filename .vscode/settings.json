@@ -1,8 +1,4 @@
 {
-    "clang.cxxflags": [
-        "-Wall",
-        "-W"
-    ],
     "files.associations": {
         "iostream": "cpp",
         "ostream": "cpp",
