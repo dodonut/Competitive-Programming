@@ -28,7 +28,9 @@
                 "-o",
                 "\"${fileDirname}/a.out\"",
                 "&&",
-                "\"${fileDirname}/a.out\""
+                "\"${fileDirname}/a.out\"",
+                "<",
+                "\"${fileDirname}/input.txt\""
             ],
             "group": {
                 "kind": "build",

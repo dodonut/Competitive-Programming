@@ -52,7 +52,6 @@ std::pair<Pos, Pos> bestSourceTarget(vector<Pos> source)
         all.push_back(std::make_pair(source[i], gtar));
     }
     all.empty() ? all.push_back(std::make_pair(Pos(0, 0), Pos(0, 0))) : std::sort(all.begin(), all.end(), sourceTargetSort);
-    printf("all[%d]:Pos(%d,%d) val: %d\n", 0, all[0].second.x, all[0].second.y, score[all[0].second.x][all[0].second.y]);
     return all[0];
 }
 
@@ -71,18 +70,17 @@ bool validPeg(vector<vector<bool>> p, int x, int y)
     return false;
 }
 
-std::pair<Pos, Pos> pickPeg(vector<vector<bool>> p)
+std::pair<Pos, Pos> pickPeg(vector<vector<bool>> &p, vector<int> &vals)
 {
-    int i, j;
+    int i, j, x, y;
     vector<Pos> source;
     vector<Pos> target;
-    for (i = 1; i <= 7; i++)
+    for (i = 0; i < vals.size(); i++)
     {
-        for (j = 1; j <= 7; j++)
-        {
-            if (p[i][j] && validPeg(p, i, j))
-                source.push_back(Pos(i, j));
-        }
+        x = posMatrix[vals[i]].x;
+        y = posMatrix[vals[i]].y;
+        if (p[x][y] && validPeg(p, x, y))
+            source.push_back(posMatrix[vals[i]]);
     }
     if (source.empty())
         return std::make_pair(Pos(0, 0), Pos(0, 0));
@@ -128,18 +126,21 @@ int main()
     while (N--)
     {
         vector<vector<bool>> pegs(xsize, vector<bool>(ysize, false));
+        vector<int> valEntered;
         while (scanf("%d", &val), val)
+        {
             pegs[posMatrix[val].x][posMatrix[val].y] = true;
+            valEntered.push_back(val);
+        }
 
-        toMove = pickPeg(pegs);
+        toMove = pickPeg(pegs, valEntered);
         while (toMove.first.x != 0)
         {
-            printf("tomove(Pos(%d,%d),Pos(%d,%d)) vals: %d valt: %d\n\n", toMove.first.x, toMove.first.y, toMove.second.x, toMove.second.y, score[toMove.first.x][toMove.first.y], score[toMove.second.x][toMove.second.y]);
             pegs[toMove.first.x][toMove.first.y] = false;
             med = median(toMove.first, toMove.second);
             pegs[med.x][med.y] = false;
             pegs[toMove.second.x][toMove.second.y] = true;
-            toMove = pickPeg(pegs);
+            toMove = pickPeg(pegs, valEntered);
         }
         printf("%d\n", countRemaining(pegs));
     }
