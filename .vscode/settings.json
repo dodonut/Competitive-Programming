@@ -47,6 +47,8 @@
         "unordered_set": "cpp",
         "bitset": "cpp",
         "cctype": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "array": "cpp",
+        "string_view": "cpp"
     }
 }
