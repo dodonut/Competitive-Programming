@@ -74,17 +74,17 @@ bool validPeg(vector<vector<bool>> p, int x, int y)
     return false;
 }
 
-std::pair<Pos, Pos> pickPeg(vector<vector<bool>> &p, vector<int> &vals)
+std::pair<Pos, Pos> pickPeg(vector<vector<bool>> &p)
 {
     int i, j, x, y;
     vector<Pos> sources;
     vector<Pos> target;
-    for (i = 0; i < vals.size(); i++)
+    for (i = 1; i <= 33; i++)
     {
-        x = posMatrix[vals[i]].x;
-        y = posMatrix[vals[i]].y;
+        x = posMatrix[i].x;
+        y = posMatrix[i].y;
         if (p[x][y] && validPeg(p, x, y))
-            sources.push_back(posMatrix[vals[i]]);
+            sources.push_back(posMatrix[i]);
     }
     if (sources.empty())
         return std::make_pair(Pos(0, 0), Pos(0, 0));
@@ -137,7 +137,7 @@ int main()
             valEntered.push_back(val);
         }
 
-        toMove = pickPeg(pegs, valEntered);
+        toMove = pickPeg(pegs);
         auto s = score[toMove.first.x][toMove.first.y];
         auto t = score[toMove.second.x][toMove.second.y];
         while (toMove.first.x != 0)
@@ -146,7 +146,7 @@ int main()
             med = median(toMove.first, toMove.second);
             pegs[med.x][med.y] = false;
             pegs[toMove.second.x][toMove.second.y] = true;
-            toMove = pickPeg(pegs, valEntered);
+            toMove = pickPeg(pegs);
             s = score[toMove.first.x][toMove.first.y];
             t = score[toMove.second.x][toMove.second.y];
         }

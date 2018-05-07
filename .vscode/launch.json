@@ -10,7 +10,8 @@
             "name": "Launch Program",
             "target": "${fileDirname}/a.out",
             "arguments": "< \"${fileDirname}/input.txt\"",
-            "cwd": "${fileDirname}"
+            "cwd": "${fileDirname}",
+            "preLaunchTask": "build"
         },
         {
             "name": "(gdb) Launch",
