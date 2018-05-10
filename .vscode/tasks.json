@@ -9,22 +9,27 @@
       "command": "g++",
       "args": [
         "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-std=c++11",
         "\"${file}\"",
         "-o",
         "\"${fileDirname}/a.out\""
       ],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
+      "group": "build",
       "problemMatcher": []
     },
     {
-      "label": "bRun",
+      "label": "build and run < >",
       "type": "shell",
       "command": "g++",
       "args": [
         "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-std=c++11",
         "\"${file}\"",
         "-o",
         "\"${fileDirname}/a.out\"",
@@ -35,10 +40,28 @@
         ">",
         "\"${fileDirname}/out.txt\""
       ],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "build and run <",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-std=c++11",
+        "\"${file}\"",
+        "-o",
+        "\"${fileDirname}/a.out\"",
+        "&&",
+        "\"${fileDirname}/a.out\"",
+        "<",
+        "\"${fileDirname}/input.txt\""
+      ],
+      "group": "build",
       "problemMatcher": []
     }
   ]

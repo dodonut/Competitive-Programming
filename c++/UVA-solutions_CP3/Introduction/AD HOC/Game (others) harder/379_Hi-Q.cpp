@@ -138,8 +138,6 @@ int main()
         }
 
         toMove = pickPeg(pegs);
-        auto s = score[toMove.first.x][toMove.first.y];
-        auto t = score[toMove.second.x][toMove.second.y];
         while (toMove.first.x != 0)
         {
             pegs[toMove.first.x][toMove.first.y] = false;
@@ -147,8 +145,6 @@ int main()
             pegs[med.x][med.y] = false;
             pegs[toMove.second.x][toMove.second.y] = true;
             toMove = pickPeg(pegs);
-            s = score[toMove.first.x][toMove.first.y];
-            t = score[toMove.second.x][toMove.second.y];
         }
         printf("%d\n", countRemaining(pegs));
     }

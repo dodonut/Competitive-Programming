@@ -49,6 +49,15 @@
         "cctype": "cpp",
         "set": "cpp",
         "array": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "*.tcc": "cpp",
+        "clocale": "cpp",
+        "ctime": "cpp",
+        "cwctype": "cpp",
+        "optional": "cpp",
+        "chrono": "cpp",
+        "numeric": "cpp",
+        "ratio": "cpp",
+        "valarray": "cpp"
     }
 }
