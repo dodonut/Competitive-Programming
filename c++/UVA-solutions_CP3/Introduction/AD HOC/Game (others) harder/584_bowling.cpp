@@ -1,16 +1,13 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
-#include <algorithm>
-#include <chrono>
 
 int main()
 {
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
 
-    //std::ios_base::sync_with_stdio(false);
-    //std::cin.tie(NULL);
-    auto val = std::chrono::high_resolution_clock::now();
-    auto i = [&val]() { return std::chrono::high_resolution_clock::now() - val; };
-    char buff[32], c;
+    char c;
     std::string input;
     int score, tempVal;
     int frame, play = 0;
@@ -25,18 +22,12 @@ int main()
         return 0;
     };
 
-    while (true)
+    while (std::getline(std::cin, input) && input != "Game Over")
     {
         score = 0;
         frame = 0;
         play = 0;
         tempVal = 0;
-        //std::getline(std::cin, input);
-        scanf(" %[^\n]", buff);
-        input = buff;
-
-        if (input == "Game Over")
-            break;
 
         input.erase(std::remove(input.begin(), input.end(), ' '), input.end());
 
@@ -65,9 +56,7 @@ int main()
                 tempVal = 0;
             }
         }
-        printf("%d\n", score);
-        //std::cout << score << '\n';
+        std::cout << score << '\n';
     }
-    std::cout << i().count();
     return 0;
 }
