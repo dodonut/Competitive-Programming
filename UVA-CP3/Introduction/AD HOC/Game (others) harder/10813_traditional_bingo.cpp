@@ -6,7 +6,7 @@ typedef std::pair<int, int> ii;
 typedef std::map<int, ii> mii;
 
 bool called[5][5];
-std::vector<int> all(76);
+int all[76];
 mii grid;
 
 void printCalled()
@@ -80,7 +80,8 @@ int main()
     while (N--)
     {
         grid.clear();
-        all.clear();
+        for (i = 0; i < 76; i++)
+            all[i] = 0;
         for (i = 0; i < 5; i++)
             for (j = 0; j < 5; j++)
                 called[i][j] = 0;
