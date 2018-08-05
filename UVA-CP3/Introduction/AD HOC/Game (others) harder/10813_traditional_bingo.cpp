@@ -9,19 +9,6 @@ bool called[5][5];
 int all[76];
 mii grid;
 
-void printCalled()
-{
-    int i, j;
-    for (i = 0; i < 5; i++)
-    {
-        for (j = 0; j < 5; j++)
-        {
-            printf(" %d", called[i][j]);
-        }
-        printf("\n");
-    }
-}
-
 bool calledAllBingoNumbers()
 {
     int i;
@@ -63,14 +50,6 @@ bool won()
             ds = false;
 
     return (dp || ds);
-}
-
-void printGrid()
-{
-    for (auto &&i : grid)
-    {
-        printf("key: %d i: %d j: %d\n", i.first, i.second.first, i.second.second);
-    }
 }
 
 int main()
