@@ -58,6 +58,9 @@
         "chrono": "cpp",
         "numeric": "cpp",
         "ratio": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "unordered_map": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp"
     }
 }
