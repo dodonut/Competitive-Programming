@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 bool is_pal(const std::string &word)
 {
@@ -12,16 +13,25 @@ bool is_pal(const std::string &word)
     return true;
 }
 
+std::string to_lower(const std::string &line)
+{
+    std::string tmp = line;
+    for (auto &&i : tmp)
+    {
+        i = std::tolower(i);
+    }
+    return tmp;
+}
+
 int main()
 {
     std::string tmp;
-
     while (getline(std::cin, tmp) && tmp != "DONE")
     {
-        tmp.erase(std::remove(tmp.begin(), tmp.end(), [](unsigned char x) { return std::ispunct(x); }), tmp.end());
-        if (is_pal(tmp))
-            printf("You won't be eaten!");
+        tmp.erase(std::remove_if(tmp.begin(), tmp.end(), [](unsigned char x) { return std::ispunct(x) || std::isspace(x); }), tmp.end());
+        if (is_pal(to_lower(tmp)))
+            printf("You won't be eaten!\n");
         else
-            printf("Uh oh..");
+            printf("Uh oh..\n");
     }
 }
