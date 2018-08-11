@@ -4,7 +4,7 @@
 #include <set>
 #include <algorithm>
 
-std::vector<std::string> dictionary, anagrams_words, words;
+std::vector<std::string> dictionary, anagrams_words;
 std::vector<int> letter_count(30);
 int qtd_letters_used;
 std::string current_phrase;
@@ -24,9 +24,8 @@ void find_anagrams(int dict_index)
     int tmp_letters_used = qtd_letters_used;
     for (; dict_index < dictionary.size(); dict_index++)
     {
-        if (originalSet.find(dictionary[dict_index]) != originalSet.end())
+        if (originalSet.find(dictionary[dict_index]) == originalSet.end())
         {
-            printf("word analised: %s\n", dictionary[dict_index].c_str());
             bool able_to_mount_word = true;
             for (auto &c : dictionary[dict_index])
             {
@@ -41,8 +40,10 @@ void find_anagrams(int dict_index)
             if (able_to_mount_word)
             {
                 anagrams_words.push_back(dictionary[dict_index]);
-                find_anagrams(dict_index + 1);
+                find_anagrams(dict_index);
                 anagrams_words.pop_back();
+                letter_count = tmp_letters_count;
+                qtd_letters_used = tmp_letters_used;
             }
             else
             {
@@ -66,11 +67,14 @@ int main()
         current_phrase = line;
 
         anagrams_words.clear();
-        letter_count.clear();
-        std::stringstream ss;
+        std::fill(letter_count.begin(), letter_count.end(), 0);
+        originalSet.clear();
+        qtd_letters_used = 0;
+        std::stringstream ss(line);
         std::string tmp;
         while (ss >> tmp)
             originalSet.insert(tmp);
+
         for (auto &c : line)
         {
             if (c != ' ')
