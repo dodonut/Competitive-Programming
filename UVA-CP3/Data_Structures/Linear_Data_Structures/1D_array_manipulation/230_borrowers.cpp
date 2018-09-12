@@ -1,9 +1,9 @@
-#include <iostream>
+#include <algorithm>
 #include <cstdio>
+#include <iostream>
+#include <string.h>
 #include <string>
 #include <vector>
-#include <algorithm>
-#include <string.h>
 
 #define ii std::pair<std::string, std::string>
 #define vii std::vector<ii>
@@ -17,11 +17,19 @@ bool compare(const ii &a, const ii &b)
     return a.second < b.second;
 }
 
-std::pair<std::string, std::string> find_pair_by_title(const std::string &title)
+bool comp(const ii &a, const ii &b)
 {
-    auto lower_bound = std::lower_bound(shelve.begin(), shelve.end(), title,
-                                        [](const ii &a, const ii &b) { return a.first < b.first; });
-    return (*lower_bound);
+    return a.first < b.first;
+}
+
+int bin_search(vii &t, int i, int f, std::string k)
+{
+    if (i == f)
+        return f;
+    int m = (i + f) / 2;
+    if (t[m].first < k)
+        return bin_search(t, m + 1, f, k);
+    return bin_search(t, i, m - 1, k);
 }
 
 void shelveSort()
@@ -29,9 +37,8 @@ void shelveSort()
     for (auto &&it = returned.begin(); it != returned.end(); ++it)
     {
         returned.erase(it);
-        auto lowerbound = std::lower_bound(shelve.begin(), shelve.end(), *it, compare);
-        auto a = std::distance(shelve.begin(), lowerbound);
-        if (a == 0)
+        auto lowerbound = bin_search(shelve, 0, shelve.size(), (*it).first);
+        if (lowerbound == 0)
         {
             printf("Put %s first\n", (*it).first.c_str());
         }
@@ -39,7 +46,7 @@ void shelveSort()
         {
             printf("Put %s after %s\n", (*it).first.c_str(), (*(--it)).first.c_str());
         }
-        shelve.insert(lowerbound, *it);
+        shelve.insert(std::advance(shelve.begin(),lowerbound),(*it));
     }
 }
 
@@ -77,7 +84,7 @@ int main()
             }
             else
             {
-                borrowed.erase(std::find(borrowed.begin(), borrowed.end(), title_author);
+                borrowed.erase(std::find(borrowed.begin(), borrowed.end(), title_author));
                 returned.push_back(title_author);
             }
         }
