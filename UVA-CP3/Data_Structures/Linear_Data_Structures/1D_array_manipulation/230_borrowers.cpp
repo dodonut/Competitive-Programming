@@ -3,25 +3,33 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <string.h>
 
 #define ii std::pair<std::string, std::string>
 #define vii std::vector<ii>
 
-vii shelve, tmpStack;
+vii shelve, borrowed, returned;
 
-bool compare(vii::iterator &a, vii::iterator &b)
+bool compare(const ii &a, const ii &b)
 {
-    if ((*a).second == (*b).second)
-        return (*a).first < (*b).first;
-    return (*a).second < (*b).second;
+    if (a.second == b.second)
+        return a.first < b.first;
+    return a.second < b.second;
+}
+
+std::pair<std::string, std::string> find_pair_by_title(const std::string &title)
+{
+    auto lower_bound = std::lower_bound(shelve.begin(), shelve.end(), title,
+                                        [](const ii &a, const ii &b) { return a.first < b.first; });
+    return (*lower_bound);
 }
 
 void shelveSort()
 {
-    for (auto &&it = tmpStack.begin(); it != tmpStack.end(); ++it)
+    for (auto &&it = returned.begin(); it != returned.end(); ++it)
     {
-        tmpStack.erase(it);
-        auto lowerbound = std::lower_bound(shelve.begin(), shelve.end(), it, compare);
+        returned.erase(it);
+        auto lowerbound = std::lower_bound(shelve.begin(), shelve.end(), *it, compare);
         auto a = std::distance(shelve.begin(), lowerbound);
         if (a == 0)
         {
@@ -55,13 +63,23 @@ int main()
             break;
         if (line == "SHELVE")
         {
-            std::sort(tmpStack.begin(), tmpStack.end(), compare);
+            std::sort(returned.begin(), returned.end(), compare);
             shelveSort();
         }
         else
         {
             sscanf(line.c_str(), "%s \"%[^\"]\"", status, title);
-            tmpStack.push_back(std::make_pair(title, author));
+            auto title_author = find_pair_by_title(title);
+            if (strcmp(status, "BORROW") == 0)
+            {
+                shelve.erase(std::find(shelve.begin(), shelve.end(), title_author));
+                borrowed.push_back(title_author);
+            }
+            else
+            {
+                borrowed.erase(std::find(borrowed.begin(), borrowed.end(), title_author);
+                returned.push_back(title_author);
+            }
         }
     }
 }
