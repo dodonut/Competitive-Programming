@@ -63,6 +63,9 @@
         "fstream": "cpp",
         "sstream": "cpp",
         "rope": "cpp",
-        "slist": "cpp"
+        "slist": "cpp",
+        "functional": "cpp",
+        "hashtable": "cpp",
+        "random": "cpp"
     }
 }
