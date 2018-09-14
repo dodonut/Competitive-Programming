@@ -22,7 +22,7 @@ void shelveSort()
         }
         else
         {
-            printf("Put \"%s\" after \"%s\"\n", it.second.c_str(), ((*(pos.first)).second.c_str()));
+            printf("Put \"%s\" after \"%s\"\n", it.second.c_str(), ((*(--(pos.first))).second.c_str()));
         }
     }
 }
