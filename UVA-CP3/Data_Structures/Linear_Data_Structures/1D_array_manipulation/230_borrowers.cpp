@@ -21,7 +21,8 @@ bool compare(const ii &a, const ii &b)
 void remove_by_title(const std::string &title)
 {
     auto lowerbound = std::lower_bound(shelve.begin(), shelve.end(), title,
-                                       [](const ii &a, std::string t) { return a.first < t; });
+                                       [](const ii &a, std::string t) { return t < a.first; });
+
     shelve.erase(lowerbound);
 }
 
@@ -29,19 +30,31 @@ void shelveSort()
 {
     for (auto &&it : returned)
     {
-        auto lower_bound = std::lower_bound(shelve.begin(), shelve.end(), it.first,
-                                            [](const ii &a, std::string t) { return a.first < t; });
+        for (auto &&i : shelve)
+            printf("shelve %s %s\n\n", i.first.c_str(), i.second.c_str());
+
+        auto lower_bound = std::lower_bound(shelve.begin(), shelve.end(), it,
+                                            [](const ii &a, const ii &b) {
+                                                if (a.second == b.second)
+                                                    return a.first < b.first;
+                                                return a.second < b.second;
+                                            });
 
         auto count = std::distance(shelve.begin(), lower_bound);
+        printf("lowerbound %s dist %d\n", (*lower_bound).first.c_str(), count);
         if (count == 0)
         {
             printf("Put %s first\n", it.first.c_str());
         }
         else
         {
-            printf("Put %s after %s\n", it.first.c_str(), (*lower_bound).first.c_str());
+            printf("Put %s after %s\n", it.first.c_str(), (*(--lower_bound)).first.c_str());
         }
         shelve.insert(lower_bound, it);
+
+        for (auto &&i : shelve)
+            printf("inserted shelve %s %s\n", i.first.c_str(), i.second.c_str());
+        printf("-----------------------\n");
     }
 }
 
@@ -70,9 +83,7 @@ int main()
         if (line == "SHELVE")
         {
             std::sort(returned.begin(), returned.end(), compare);
-            for (auto &&i : shelve)
-                printf("shelve %s %s\n", i.first.c_str(), i.second.c_str());
-            //shelveSort();
+            shelveSort();
         }
 
         else
