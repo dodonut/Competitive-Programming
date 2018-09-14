@@ -1,60 +1,29 @@
 #include <iostream>
-#include <algorithm>
-#include <vector>
 #include <map>
 #include <cstdio>
+#include <set>
 #include <cstring>
 
 #define ii std::pair<std::string, std::string>
-#define vii std::vector<ii>
+#define sii std::set<ii>
 
-vii shelve, returned;
+sii shelve, returned;
 std::map<std::string, std::string> shelvemap, borrow;
-
-bool compare(const ii &a, const ii &b)
-{
-    if (a.second == b.second)
-        return a.first < b.first;
-    return a.second < b.second;
-}
-
-void remove_by_title(const std::string &title)
-{
-    auto lowerbound = std::lower_bound(shelve.begin(), shelve.end(), title,
-                                       [](const ii &a, std::string t) { return t < a.first; });
-
-    shelve.erase(lowerbound);
-}
 
 void shelveSort()
 {
     for (auto &&it : returned)
     {
-        for (auto &&i : shelve)
-            printf("shelve %s %s\n\n", i.first.c_str(), i.second.c_str());
-
-        auto lower_bound = std::lower_bound(shelve.begin(), shelve.end(), it,
-                                            [](const ii &a, const ii &b) {
-                                                if (a.second == b.second)
-                                                    return a.first < b.first;
-                                                return a.second < b.second;
-                                            });
-
-        auto count = std::distance(shelve.begin(), lower_bound);
-        printf("lowerbound %s dist %d\n", (*lower_bound).first.c_str(), count);
+        auto pos = shelve.insert(it);
+        auto count = std::distance(shelve.begin(), pos.first);
         if (count == 0)
         {
-            printf("Put %s first\n", it.first.c_str());
+            printf("Put \"%s\" first\n", it.second.c_str());
         }
         else
         {
-            printf("Put %s after %s\n", it.first.c_str(), (*(--lower_bound)).first.c_str());
+            printf("Put \"%s\" after \"%s\"\n", it.second.c_str(), ((*(pos.first)).second.c_str()));
         }
-        shelve.insert(lower_bound, it);
-
-        for (auto &&i : shelve)
-            printf("inserted shelve %s %s\n", i.first.c_str(), i.second.c_str());
-        printf("-----------------------\n");
     }
 }
 
@@ -70,10 +39,8 @@ int main()
             break;
         sscanf(line.c_str(), " \"%[^\"]\" by %[^\n\r]", title, author);
         shelvemap[title] = author;
-        shelve.push_back(std::make_pair(title, author));
+        shelve.insert(std::make_pair(author, title));
     }
-
-    std::sort(shelve.begin(), shelve.end(), compare);
 
     while (getline(std::cin, line))
     {
@@ -82,8 +49,9 @@ int main()
 
         if (line == "SHELVE")
         {
-            std::sort(returned.begin(), returned.end(), compare);
             shelveSort();
+            printf("END\n");
+            returned.clear();
         }
 
         else
@@ -91,12 +59,12 @@ int main()
             sscanf(line.c_str(), "%s \"%[^\"]\"", status, title);
             if (strcmp(status, "BORROW") == 0)
             {
-                remove_by_title(title);
+                shelve.erase(std::make_pair(shelvemap[title], title));
                 borrow[title] = shelvemap[title];
             }
             else
             {
-                returned.push_back(std::make_pair(title, borrow[title]));
+                returned.insert(std::make_pair(borrow[title], title));
                 borrow.erase(title);
             }
         }
