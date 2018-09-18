@@ -18,9 +18,9 @@ int main()
     std::map<std::string, Array> n;
     scanf("%d %d", &N, &R);
 
-    Array Arr;
     while (N--)
     {
+        Array Arr;
         scanf(" %s %d %d %d", &(Arr.name), &(Arr.base), &(Arr.size), &(Arr.D));
         for (int i = 0; i < Arr.D; i++)
         {
