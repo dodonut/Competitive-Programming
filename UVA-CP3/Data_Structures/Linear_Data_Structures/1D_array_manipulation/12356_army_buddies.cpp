@@ -1,38 +1,28 @@
 #include <iostream>
 #include <numeric>
 #include <vector>
+#include <algorithm>
 
 std::vector<int> army;
 
 void dead(int from, int to)
 {
-    std::fill(army.begin() + from, army.begin() + to, 0);
-    bool fromBuddieFound = false, toBuddieFound = false;
-    while (from-- >= 0)
-    {
-        if (army[from] != 0)
-        {
-            fromBuddieFound = true;
-            break;
-        }
-    }
-    while (to++ < army.size())
-    {
-        if (army[to] != 0)
-        {
-            toBuddieFound = true;
-            break;
-        }
-    }
-    if (fromBuddieFound)
-        printf("%d ", army[from]);
+
+    auto f = std::lower_bound(army.begin(), army.end(), from);
+    auto t = std::upper_bound(army.begin(), army.end(), to);
+
+    if (std::distance(army.begin(), f - 1) >= 0)
+        printf("%d ", *(--f));
     else
         printf("* ");
 
-    if (toBuddieFound)
-        printf("%d", army[to]);
+    if (std::abs(std::distance(army.end(), t)) > 0)
+        printf("%d", *t);
     else
         printf("*");
+
+    army.erase(f, t);
+
 }
 
 int main()
@@ -47,7 +37,7 @@ int main()
         for (int i = 0; i < B; i++)
         {
             scanf("%d %d", &from, &to);
-            dead(from - 1, to);
+            dead(from, to);
             printf("\n");
         }
         printf("-\n");
