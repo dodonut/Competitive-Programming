@@ -1,7 +1,7 @@
+#include <algorithm>
 #include <iostream>
 #include <numeric>
 #include <vector>
-#include <algorithm>
 
 std::vector<int> army;
 
@@ -12,7 +12,7 @@ void dead(int from, int to)
     auto t = std::upper_bound(army.begin(), army.end(), to);
 
     if (std::distance(army.begin(), f - 1) >= 0)
-        printf("%d ", *(--f));
+        printf("%d ", *(f - 1));
     else
         printf("* ");
 
@@ -22,7 +22,6 @@ void dead(int from, int to)
         printf("*");
 
     army.erase(f, t);
-
 }
 
 int main()

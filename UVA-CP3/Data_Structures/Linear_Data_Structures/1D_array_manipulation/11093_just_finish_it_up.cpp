@@ -9,17 +9,15 @@ int CanCompleteLap(std::vector<int> &F, std::vector<int> &S)
     {
         j = i;
         enoughFuel = true;
+        fuel = 0;
         do
         {
             fuel += F[j] - S[j];
             j = (j + 1) % F.size();
         } while (j != i && fuel >= 0);
-        if (enoughFuel)
-        {
-            printf("Enough Fuel: %d", fuel);
+        if (fuel >= 0)
             return i + 1;
         }
-    }
     return -1;
 }
 
