@@ -10,8 +10,12 @@ int main()
     int S, B, l, r;
     while (scanf("%d %d", &S, &B), S || B)
     {
-        std::iota(left.begin(), left.begin() + S, 0);
-        std::iota(right.begin(), right.begin() + S, 1);
+        for(int i = 0; i < S; i++){
+            left[i] = i - 1;
+            right[i] = i + 1;
+        }
+        std::iota(left.begin(), left.begin() + S + 1, -1);
+        std::iota(right.begin(), right.begin() + S + 1, 1);
         right[S] = 0;
 
         for (int i = 0; i < B; i++)
@@ -24,12 +28,12 @@ int main()
             if (left[l] == 0)
                 printf("* ");
             else
-                printf("%d ", left[right[r]]);
+                printf("%d ", left[l]);
 
             if (right[r] == 0)
                 printf("*");
             else
-                printf("%d", right[left[l]]);
+                printf("%d", right[r]);
             printf("\n");
         }
         printf("-\n");
