@@ -1,51 +1,52 @@
 #include <iostream>
 #include <vector>
 
-int CanCompleteLap(std::vector<int> &F, std::vector<int> &S)
-{
-    int i, j, fuel;
-    bool enoughFuel;
-    for (i = 0; i < F.size(); i++)
-    {
-        j = i;
-        enoughFuel = true;
-        fuel = 0;
-        do
-        {
-            fuel += F[j] - S[j];
-            j = (j + 1) % F.size();
-        } while (j != i && fuel >= 0);
-        if (fuel >= 0)
-            return i + 1;
-        }
-    return -1;
-}
-
 int main()
 {
-    int T, N, tmp, count = 1;
-    std::vector<int> F, S;
+    int T, N, count = 1, tot_p, tot_q;
+    bool flag;
+    std::vector<int> F(100002), S(100002);
     scanf("%d", &T);
     while (T--)
     {
-        F.clear();
-        S.clear();
+        flag = false;
+        tot_p = 0;
+        tot_q = 0;
         scanf("%d", &N);
         for (int i = 0; i < N; i++)
         {
-            scanf("%d", &tmp);
-            F.push_back(tmp);
+            scanf("%d", &F[i]);
+            tot_p += F[i];
         }
         for (int i = 0; i < N; i++)
         {
-            scanf("%d", &tmp);
-            S.push_back(tmp);
+            scanf("%d", &S[i]);
+            tot_q += S[i];
         }
-        int c = CanCompleteLap(F, S);
         printf("Case %d: ", count++);
-        if (c > 0)
-            printf("Possible from station %d\n", c);
-        else
+        if (tot_p < tot_q)
             printf("Not possible\n");
+        else
+        {
+            for (int i = 0; i < N; i++)
+            {
+                tot_p = 0;
+                flag = false;
+                int j = i;
+                do
+                {
+                    tot_p += F[j] - S[j];
+                    if (tot_p < 0)
+                        flag = true;
+                    j = (j + 1) % N;
+                } while (!flag);
+
+                if (!flag)
+                {
+                    printf("Possible from station %d\n", i + 1);
+                    break;
+                }
+            }
+        }
     }
 }
