@@ -39,7 +39,7 @@ int main()
                     if (tot_p < 0)
                         flag = true;
                     j = (j + 1) % N;
-                } while (!flag);
+                } while (j != i && !flag);
 
                 if (!flag)
                 {
