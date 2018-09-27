@@ -24,4 +24,5 @@ Also, important to mention, the second link is just an nice interface for proble
         * Palindrome : 353, 401, 10018, 10945, 11221, 11309
 - Data Structures:
     - Linear Data Structues:
-        - 1D_array_manipulation: 230
+        - 1D_array_manipulation: 230, 294, 414, 467, 482, 591, 10038, 11093, 11340, 12356
+        - 2D_array_manipulation: 10855
