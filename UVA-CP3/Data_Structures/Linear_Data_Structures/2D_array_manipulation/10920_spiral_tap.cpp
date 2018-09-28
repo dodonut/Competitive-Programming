@@ -11,27 +11,25 @@ int binary_search(int i, int f, int v)
         else
             f = m;
     } while (m != v);
-    return m - tmp_i + 1;
+    return m - tmp_i;
 }
 
 int main()
 {
-    int sz, p, r, c, count, s, f, m;
-    bool decRow, decCol;
+    int sz, p, r, c, count, s, f, m, lim_inf, lim_sup;
     long long n;
     while (scanf("%d%d", &sz, &p), sz || p)
     {
         count = 1;
         n = 1;
         while (p > n)
-        {
-            count += 2;
-            n = count * count;
-        }
+            d count += 2;
+
+        lim_inf = (sz / 2) - (n / 2);
+        lim_sup = (sz / 2) + (n / 2);
         f = n * n;
         s = f - n + 1;
         count = 0;
-        bool foundRange = false;
         while (s > p)
         {
             f = s;
@@ -41,10 +39,20 @@ int main()
         switch (count)
         {
         case 0:
-            c = n;
-            r = binary_search(s, f, p);
+            c = lim_sup;
+            r = binary_search(s, f, p) + lim_inf;
             break;
         case 1:
+            r = lim_inf;
+            c = binary_search(s, f, p) + lim_inf;
+            break;
+        case 2:
+            c = lim_inf;
+            r = binary_search(s, f, p) + lim_inf;
+            break;
+        case 3:
+            r = lim_sup;
+            c = binary_search(s, f, p) + lim_inf;
         }
 
         printf("Line = %d, column = %d.\n", r, c);
