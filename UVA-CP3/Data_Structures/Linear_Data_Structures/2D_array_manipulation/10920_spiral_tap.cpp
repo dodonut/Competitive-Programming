@@ -1,32 +1,30 @@
 #include <iostream>
 
-int binary_search(int i, int f, int v)
+int binary_search(long long i, long long f, long long v)
 {
-    int m, tmp_i = i;
-    do
+    long long m, tmp_i = i;
+    while (i != f)
     {
         m = (i + f) / 2;
         if (m < v)
-            i = m;
+            i = m + 1;
         else
             f = m;
-    } while (m != v);
-    return m - tmp_i;
+    }
+    return i - tmp_i;
 }
 
 int main()
 {
-    int sz, p, r, c, count, s, f, m, lim_inf, lim_sup;
-    long long n;
-    while (scanf("%d%d", &sz, &p), sz || p)
+    long long n, p, sz, r, c, count, s, f, m, lim_inf, lim_sup;
+    while (scanf("%lld%lld", &sz, &p), sz || p)
     {
-        count = 1;
         n = 1;
-        while (p > n)
-            d count += 2;
+        while (p > n * n)
+            n += 2;
 
-        lim_inf = (sz / 2) - (n / 2);
-        lim_sup = (sz / 2) + (n / 2);
+        lim_inf = (sz / 2) + 1 - (n / 2);
+        lim_sup = (sz / 2) + 1 + (n / 2);
         f = n * n;
         s = f - n + 1;
         count = 0;
@@ -44,17 +42,16 @@ int main()
             break;
         case 1:
             r = lim_inf;
-            c = binary_search(s, f, p) + lim_inf;
+            c = binary_search(s, f - 1, p) + lim_inf;
             break;
         case 2:
             c = lim_inf;
-            r = binary_search(s, f, p) + lim_inf;
+            r = lim_sup - binary_search(s, f - 1, p);
             break;
         case 3:
             r = lim_sup;
-            c = binary_search(s, f, p) + lim_inf;
+            c = lim_sup - binary_search(s + 1, f - 1, p) - 1;
         }
-
         printf("Line = %d, column = %d.\n", r, c);
     }
 }
