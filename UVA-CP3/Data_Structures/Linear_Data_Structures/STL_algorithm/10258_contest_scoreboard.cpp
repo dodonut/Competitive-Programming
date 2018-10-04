@@ -7,7 +7,7 @@ int number_problems_solved[102], number_problems_unsolved[102][10], penalties[10
 bool contestants[102], problem_solved[102][10];
 struct Contestant
 {
-    int contestant_number, problem_solved, penalty;
+    int contestant_number, problems_solved, penalty;
 };
 
 bool comp(const Contestant &a, const Contestant &b)
