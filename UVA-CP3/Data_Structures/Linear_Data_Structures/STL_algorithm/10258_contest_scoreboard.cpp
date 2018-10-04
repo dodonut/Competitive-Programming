@@ -3,26 +3,28 @@
 #include <sstream>
 #include <algorithm>
 
-int problems_solved[102], problems_unsolved[102][10], penalties[102];
-bool contestants[102];
+int number_problems_solved[102], number_problems_unsolved[102][10], penalties[102];
+bool contestants[102], problem_solved[102][10];
 struct Contestant
 {
-    int contestant_number;
-    int problems_solved;
-    int penalty;
-} Cont;
+    int contestant_number, problem_solved, penalty;
+};
 
 bool comp(const Contestant &a, const Contestant &b)
 {
     if (a.problems_solved == b.problems_solved)
+    {
+        if (a.penalty == b.penalty)
+            return a.contestant_number < b.contestant_number;
         return a.penalty < b.penalty;
+    }
     return a.problems_solved > b.problems_solved;
 }
 
 int main()
 {
-    int T, contestant, problem, _time, status, count = 0;
-    char c;
+    int T, contestant, problem, _time, count = 0;
+    char status;
     std::vector<Contestant> to_print;
     std::string line;
     scanf("%d ", &T);
@@ -35,27 +37,31 @@ int main()
         {
             for (int j = 0; j < 10; j++)
             {
-                problems_unsolved[i][j] = 0;
+                number_problems_unsolved[i][j] = 0;
+                problem_solved[i][j] = false;
             }
-            problems_solved[i] = 0;
+            number_problems_solved[i] = 0;
             penalties[i] = 0;
             contestants[i] = false;
         }
+        to_print.clear();
         while (getline(std::cin, line) && line.size() > 0)
         {
             std::stringstream ss(line);
             sscanf(line.c_str(), "%d %d %d %c", &contestant, &problem, &_time, &status);
             contestants[contestant] = true;
-            if (status == 'C')
+            if (status == 'C' && !problem_solved[contestant][problem])
             {
-                penalties[contestant] += _time + 20 * problems_unsolved[contestant][problem];
-                problems_solved[contestant]++;
+                penalties[contestant] += _time + 20 * number_problems_unsolved[contestant][problem];
+                number_problems_solved[contestant]++;
+                problem_solved[contestant][problem] = true;
             }
             else if (status == 'I')
             {
-                problems_unsolved[contestant][problem]++;
+                number_problems_unsolved[contestant][problem]++;
             }
         }
+
         for (int i = 1; i <= 100; i++)
         {
             if (contestants[i])
@@ -63,7 +69,7 @@ int main()
                 Contestant c;
                 c.contestant_number = i;
                 c.penalty = penalties[i];
-                c.problems_solved = problems_solved[i];
+                c.problems_solved = number_problems_solved[i];
                 to_print.push_back(c);
             }
         }
