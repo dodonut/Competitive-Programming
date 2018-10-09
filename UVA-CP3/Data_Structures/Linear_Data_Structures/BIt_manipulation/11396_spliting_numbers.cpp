@@ -1,25 +1,28 @@
 #include <iostream>
 #include <bitset>
+#include <cstdio>
 
 int main()
 {
-    std::bitset<32> a, b;
-    unsigned int n;
+    unsigned int n, a, b;
     int i;
     while (scanf("%ud", &n), n)
     {
         i = 1;
-        a.reset();
-        b.reset();
-        int k = 0;
-        while ((1 << i) < n)
+        a = 0;
+        b = 0;
+        bool odd = false;
+        while ((1 << i++) < n)
         {
-            if (k % 2)
-                b.set(j, n | (1 << j));
-            else
-                a.set(j, n | (1 << j));
-            k++;
+            if (n & (1 << i))
+            {
+                if (odd)
+                    b++;
+                else
+                    a++;
+                odd = !odd;
+            }
         }
-        printf("%ul %ul\n", a.to_ulong(), b.to_ulong());
+        printf("%ul %ul\n", a, b);
     }
 }
