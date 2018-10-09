@@ -4,25 +4,26 @@
 
 int main()
 {
-    unsigned int n, a, b;
+    unsigned long n, a, b;
     int i;
-    while (scanf("%ud", &n), n)
+    while (scanf("%lu", &n), n)
     {
         i = 0;
         a = 0;
         b = 0;
         bool odd = false;
-        while ((1 << i++) < n)
+        while ((1 << i) <= n)
         {
             if (n & (1 << i))
             {
                 if (odd)
-                    b |= (i << i);
+                    b |= (1 << i);
                 else
-                    a |= (i << i);
+                    a |= (1 << i);
                 odd = !odd;
             }
+            i++;
         }
-        printf("%ul %ul\n", a, b);
+        printf("%lu %lu\n", a, b);
     }
 }
