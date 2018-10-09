@@ -8,7 +8,7 @@ int main()
     int i;
     while (scanf("%ud", &n), n)
     {
-        i = 1;
+        i = 0;
         a = 0;
         b = 0;
         bool odd = false;
@@ -17,9 +17,9 @@ int main()
             if (n & (1 << i))
             {
                 if (odd)
-                    b++;
+                    b |= (i << i);
                 else
-                    a++;
+                    a |= (i << i);
                 odd = !odd;
             }
         }
