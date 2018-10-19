@@ -3,6 +3,7 @@
 #include <algorithm>
 
 std::string source, target;
+int len;
 
 bool possible(std::string a, std::string b)
 {
@@ -13,21 +14,30 @@ bool possible(std::string a, std::string b)
 
 void printPop(std::stack<char> m)
 {
-    while (!m.empty)
+    int count = 0;
+    std::stack<char> p;
+    while (!m.empty())
     {
-        std::cout << m.top() << ' ';
+        p.push(m.top());
         m.pop();
+    }
+    while (!p.empty())
+    {
+        if (count++)
+            std::cout << ' ';
+        std::cout << p.top();
+        p.pop();
     }
     std::cout << '\n';
 }
 
 void anagram(int i, int o, std::stack<char> s, std::string m, std::stack<char> poppush)
 {
-    if (m == target)
+    if (i == len && o == len)
         printPop(poppush);
     else
     {
-        if (i < source.size())
+        if (i < len)
         {
             s.push(source[i]);
             poppush.push('i');
@@ -37,7 +47,6 @@ void anagram(int i, int o, std::stack<char> s, std::string m, std::stack<char> p
         }
         if (!s.empty() && s.top() == target[o])
         {
-            m += s.top();
             s.pop();
             poppush.push('o');
             anagram(i, o + 1, s, m, poppush);
@@ -47,12 +56,13 @@ void anagram(int i, int o, std::stack<char> s, std::string m, std::stack<char> p
 
 int main()
 {
-    std::stack<char> push;
+    std::stack<char> push, pop;
     while (std::cin >> source >> target)
     {
         printf("[\n");
+        len = source.size();
         if (possible(source, target))
-            anagram(0, 0, push, "", "");
+            anagram(0, 0, push, "", pop);
         printf("]\n");
     }
 }
