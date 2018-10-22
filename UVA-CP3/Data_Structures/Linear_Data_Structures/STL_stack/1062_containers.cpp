@@ -1,27 +1,41 @@
 #include <iostream>
 #include <cstring>
-#include <map>
+#include <stack>
+#include <vector>
 #include <algorithm>
 
 int main()
 {
     char stack[1005];
-    std::map<char, int> map;
+    std::vector<std::vector<char>> stks;
     int len, count, Case = 1;
+    bool fit;
     while (fgets(stack, 1005, stdin) && strcmp(stack, "end\n"))
     {
         //printf("string %s -> ", stack);
-        len = strlen(stack);
-        count = 1;
-        for (int i = len - 2; i > 0; i--)
-        {
-            if (stack[i] > stack[i - 1])
-                count++;
+        for (auto k : stks)
+            k.clear();
+        stks.clear();
 
-            map[stack[i]] = 1;
+        len = strlen(stack);
+        for (int i = 0; i < len - 2; i++)
+        {
+            fit = false;
+            for (int j = 0; j < stks.size() && !fit; i++)
+            {
+                if (stack[i] <= stks[j].back())
+                {
+                    stks[j].push_back(stack[i]);
+                    fit = true;
+                }
+            }
+            if (!fit)
+            {
+                std::vector<char> k;
+                k.push_back(stack[i]);
+                stks.push_back(k);
+            }
         }
-        map[stack[0]] = 1;
-        printf("%d %d\n", count, (int)map.size());
-        printf("Case %d: %d\n", Case++, std::min(count, (int)map.size()));
+        printf("Case %d: %d\n", Case++, stks.size());
     }
 }
