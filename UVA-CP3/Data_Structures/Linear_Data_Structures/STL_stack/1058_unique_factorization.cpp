@@ -4,67 +4,83 @@
 #include <stack>
 
 int f[1500];
-std::vector<std::stack<int>> ff;
+std::vector<std::vector<int>> ff;
 int levels;
+int n;
 int len;
 
 void factors(int number)
 {
     std::vector<int> s;
     int i;
+    int count = 0;
     for (i = 2; i <= sqrt(number); i++)
     {
         if (number % i == 0)
         {
-            f[i] = i;
+            f[count++] = i;
             s.push_back(number / i);
         }
     }
-    for (int j = 0; j < s.size(); j++)
-        f[i++] = s[j];
+    for (int j = s.size() - 1; j >= 0; j--)
+        f[count++] = s[j];
 
-    len = i;
+    len = count;
 }
 
-void factorizations(int currentVal, int number, std::stack<int> s)
+void factorizations(int index, int currentVal, std::vector<int> s)
 {
     int val;
-    for (int i = 1; i <= len; i++)
+    for (int i = index; i < len; i++)
     {
         val = currentVal * f[i];
-        if (val < number)
+        if (val < n)
         {
-            s.push(f[i]);
-            factorizations(val, number, s);
-            s.pop();
+            s.push_back(f[i]);
+            factorizations(i, val, s);
+            s.pop_back();
         }
-        else if (val == number)
+        else if (val == n)
         {
-            s.push(f[i]);
+            s.push_back(f[i]);
             ff.push_back(s);
             levels++;
+            return;
         }
-        return;
+        else
+        {
+            return;
+        }
     }
 }
 
 int main()
 {
-    int T, n;
-
+    int T, c;
     while (scanf("%d", &n), n)
     {
         for (auto &i : ff)
-        {
-            while (!i.empty())
-                i.pop();
-        }
+            i.clear();
         ff.clear();
         levels = 0;
-        std::stack<int> a;
+        std::vector<int> a;
 
         factors(n);
-        factorizations(0, n, a);
-        printf("%d", levels);
+        factorizations(0, 1, a);
+        printf("%d\n", levels);
+        if (levels)
+        {
+            for (auto &t : ff)
+            {
+                c = 0;
+                for (auto &k : t)
+                {
+                    if (c++)
+                        putchar(' ');
+                    printf("%d", k);
+                }
+                puts("");
+            }
+        }
     }
 }
