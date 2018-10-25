@@ -30,7 +30,7 @@ void factors(int number)
 
 void factorizations(int index, int currentVal, std::vector<int> s)
 {
-    int val;
+    unsigned long long val;
     for (int i = index; i < len; i++)
     {
         val = currentVal * f[i];
