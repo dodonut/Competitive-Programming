@@ -1,72 +1,78 @@
 #include <cstdio>
+#include <cstring>
+#include <set>
 #include <vector>
 #include <algorithm>
 
-int prob_solved[26], prob_unsolved[26][8], penalties[26];
-bool team_exist[26];
-struct Team
+struct Problem
 {
-    int problems_solved, penalties, team_number;
-    bool operator<(const Team &b)
+    bool solved;
+    int solved_time;
+    std::set<int> submissions;
+    Problem()
     {
-        if (problems_solved == b.problems_solved)
-        {
-            if (penalties == b.penalties)
-                return team_number < b.team_number;
-            return penalties < b.penalties;
-        }
-        return problems_solved < b.problems_solved;
+        solved = false;
+        solved_time = 0;
+        submissions.clear();
     }
 };
 
+struct Team
+{
+    std::vector<Problem> p;
+    int n_prob_solved, total_time, team_number;
+    Team()
+    {
+        p.reserve(8);
+        n_prob_solved = 0;
+    }
+};
+
+bool comp(const Team &a, const Team &b)
+{
+    if (a.n_prob_solved == b.n_prob_solved)
+    {
+        if (a.total_time == b.total_time)
+            return a.team_number < b.team_number;
+        return a.total_time < b.total_time;
+    }
+    return a.n_prob_solved > b.n_prob_solved;
+}
+
 int main()
 {
-    freopen("input.txt", "r", stdin);
-
-    int n_team = 200, hour, minutes;
-    char status, problem;
-    std::vector<Team> Teams;
-    printf("RANK TEAM PRO/SOLVED TIME\n");
-    while (scanf("%d %c %d:%d %c", &n_team, &problem, &hour, &minutes, &status) != EOF)
+    int n, max_contest, h, m, nt;
+    char line[15], s, p;
+    std::vector<Team> teams(26), kt;
+    scanf("%d", &n);
+    while (n--)
     {
-        team_exist[n_team] = true;
-        if (status == 'N')
+        max_contest = 1;
+        teams.clear();
+        kt.clear();
+
+        printf("RANK TEAM PRO/SOLVED TIME\n");
+        while (fgets(line, 15, stdin) != NULL && line[0] != '\n')
         {
-            prob_unsolved[n_team][problem - 'A']++;
-        }
-        else
-        {
-            prob_solved[n_team]++;
-            penalties[n_team] += prob_unsolved[n_team][problem - 'A'] * 20 + hour * 60 + minutes;
+            sscanf(line, "%d %c %d:%d %c", &nt, &p, &h, &m, &s);
+            if (max_contest < nt)
+                max_contest = nt;
+            if (s == 'Y')
+            {
+                teams[nt].n_prob_solved++;
+                teams[nt].p[p].solved_time = h * 60 + m;
+            }
+            teams[nt].p[p].submissions.insert(h * 60 + m);
         }
 
-        for (int i = 0; i < 26; i++)
+        for (int i = 1; i <= max_contest; i++)
         {
-            if (team_exist[i])
+            for (int j = 0; j < 8; j++)
             {
-                Team t;
-                t.team_number = i;
-                t.problems_solved = prob_solved[i];
-                t.penalties = penalties[i];
-                Teams.push_back(t);
+                for (auto &k : teams[i].p[j].submissions)
+                {
+                }
             }
         }
-    }
-    std::sort(Teams.begin(), Teams.end());
-
-    int current_rank = 1;
-    for (int i = 0; i < Teams.size(); i++)
-    {
-        if (i > 0 && Teams[i].penalties == Teams[i - 1].penalties && Teams[i].problems_solved == Teams[i - 1].problems_solved)
-            printf("%4d", current_rank);
-        else
-        {
-            printf("%4d", i + 1);
-            current_rank = i + 1;
-        }
-        printf(" %4d", Teams[i].team_number);
-        if (Teams[i].problems_solved > 0)
-            printf(" %4d %10d", Teams[i].problems_solved, Teams[i].penalties);
-        printf("\n");
     }
 }

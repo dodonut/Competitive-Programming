@@ -5,16 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "gdb",
-            "request": "launch",
-            "name": "Windows debug c++",
-            "target": "${fileDirname}/a.out",
-            "cwd": "${workspaceRoot}",
-            "arguments": "< ${fileDirname}/input.txt",
-            "gdbpath": "C:/MinGw/bin/gdb.exe",
-            "preLaunchTask": "build"
-        },
-        {
             "name": "C++ Debug",
             "type": "cppdbg",
             "request": "launch",
@@ -27,6 +17,10 @@
             "windows": {
                 "MIMode": "gdb",
                 "miDebuggerPath": "C:/MinGw/bin/gdb.exe"
+            },
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "/usr/bin/gdb"
             },
             "preLaunchTask": "build"
         }
