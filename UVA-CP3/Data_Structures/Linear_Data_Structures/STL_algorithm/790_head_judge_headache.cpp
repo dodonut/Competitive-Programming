@@ -1,4 +1,4 @@
-#include <iostream>
+#include <cstdio>
 #include <vector>
 #include <algorithm>
 
@@ -21,7 +21,9 @@ struct Team
 
 int main()
 {
-    int n_team, hour, minutes;
+    freopen("input.txt", "r", stdin);
+
+    int n_team = 200, hour, minutes;
     char status, problem;
     std::vector<Team> Teams;
     printf("RANK TEAM PRO/SOLVED TIME\n");

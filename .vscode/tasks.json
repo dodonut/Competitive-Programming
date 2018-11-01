@@ -63,6 +63,21 @@
       ],
       "group": "build",
       "problemMatcher": []
+    },
+    {
+      "label": "build & debug file",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-g",
+        "-o",
+        "${fileBasenameNoExtension}",
+        "${file}"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     }
   ]
 }

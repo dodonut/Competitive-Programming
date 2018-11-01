@@ -7,30 +7,28 @@
         {
             "type": "gdb",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Windows debug c++",
             "target": "${fileDirname}/a.out",
-            "arguments": "< \"${fileDirname}/input.txt\"",
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceRoot}",
+            "arguments": "< ${fileDirname}/input.txt",
+            "gdbpath": "C:/MinGw/bin/gdb.exe",
             "preLaunchTask": "build"
         },
         {
-            "name": "(gdb) Launch",
+            "name": "C++ Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "enter program name, for example ${workspaceFolder}/a.out",
+            "program": "${fileDirname}/a.out",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${fileDirname}",
             "environment": [],
             "externalConsole": true,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
+            "windows": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "C:/MinGw/bin/gdb.exe"
+            },
+            "preLaunchTask": "build"
         }
     ]
 }
