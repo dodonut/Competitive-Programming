@@ -19,12 +19,12 @@ struct Problem
 
 struct Team
 {
-    std::vector<Problem> p;
+    Problem p[8];
     int n_prob_solved, total_time, team_number;
     Team()
     {
-        p.reserve(8);
         n_prob_solved = 0;
+        team_number = 27;
     }
 };
 
@@ -41,15 +41,22 @@ bool comp(const Team &a, const Team &b)
 
 int main()
 {
+    freopen("input.txt", "r", stdin);
+    freopen("out.txt", "w", stdout);
+
     int n, max_contest, h, m, nt;
     char line[15], s, p;
-    std::vector<Team> teams(26), kt;
-    scanf("%d", &n);
+    Team teams[26];
+    scanf("%d ", &n);
     while (n--)
     {
         max_contest = 1;
-        teams.clear();
-        kt.clear();
+        for (int i = 0; i < 26; i++)
+        {
+            Team t;
+            t.team_number = i;
+            teams[i] = t;
+        }
 
         printf("RANK TEAM PRO/SOLVED TIME\n");
         while (fgets(line, 15, stdin) != NULL && line[0] != '\n')
@@ -60,18 +67,40 @@ int main()
             if (s == 'Y')
             {
                 teams[nt].n_prob_solved++;
-                teams[nt].p[p].solved_time = h * 60 + m;
+                teams[nt].p[p - 'A'].solved_time = h * 60 + m;
+                teams[nt].p[p - 'A'].solved = true;
             }
-            teams[nt].p[p].submissions.insert(h * 60 + m);
+            teams[nt].p[p - 'A'].submissions.insert(h * 60 + m);
         }
 
         for (int i = 1; i <= max_contest; i++)
         {
             for (int j = 0; j < 8; j++)
             {
-                for (auto &k : teams[i].p[j].submissions)
+                if (teams[i].p[j].solved)
                 {
+                    for (auto &k : teams[i].p[j].submissions)
+                    {
+                        if (teams[i].p[j].solved_time != k)
+                            teams[i].total_time += 20;
+                        else
+                        {
+                            teams[i].total_time += k;
+                            break;
+                        }
+                    }
                 }
+            }
+        }
+
+        std::sort(teams, teams + max_contest, comp);
+        int rank = 1;
+        for (int i = 1; i < max_contest; i++)
+        {
+            printf("%4d%5d%5d%11d\n", rank, teams[i].team_number, teams[i].n_prob_solved, teams[i].total_time);
+            if (i > 1 && !(teams[i].n_prob_solved == teams[i - 1].n_prob_solved && teams[i].total_time == teams[i - 1].total_time))
+            {
+                rank = i;
             }
         }
     }
