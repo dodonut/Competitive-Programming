@@ -42,9 +42,6 @@ bool comp(const Team &a, const Team &b)
 
 int main()
 {
-    freopen("input.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
-
     int n, max_contest, h, m, nt;
     char line[15], s, p;
     Team teams[26];
