@@ -41,9 +41,9 @@
       },
     },
     {
-      "label": "build and run <",
+      "label": "build and run",
       "type": "shell",
-      "command": "g++ -g -Wall ${file} -o \"${fileDirname}/a.out\" && \"${fileDirname}/a.out\" < \"${fileDirname}/input.txt\"",
+      "command": "g++ -g -Wall ${file} -o \"${fileDirname}/a.out\" && \"${fileDirname}/a.out\"",
       "args": [],
       "group": "build",
       "problemMatcher": {
