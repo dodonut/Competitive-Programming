@@ -1,18 +1,13 @@
 #include <iostream>
-#include <stack>
 #include <queue>
+#include <stack>
 #include <vector>
 
-struct station
+bool all_empty(const std::vector<std::queue<int>> &stations)
 {
-    std::queue<int> plataformB;
-};
-
-bool all_empty(std::vector<station> &s)
-{
-    for (int i = 0; i < s.size(); i++)
+    for (auto &&a : stations)
     {
-        if (!s[i].plataformB.empty())
+        if (!a.empty())
             return false;
     }
     return true;
@@ -20,50 +15,61 @@ bool all_empty(std::vector<station> &s)
 
 int main()
 {
-    int minutes, set, N, S, Q, cargoes, cargo, curr_station;
-    scanf("%d", &set);
-    while (set--)
+    freopen("input.txt", "r", stdin);
+    freopen("out.txt", "w", stdout);
+
+    int n, SET, N, S, Q, Qi, Qi_cargo;
+    scanf("%d", &SET);
+    while (SET--)
     {
-        minutes = 0;
         std::stack<int> cargo_carrier;
-        std::vector<station> st(N);
-        scanf("%d %d %d", &N, &S, &Q);
+        scanf("%d%d%d", &N, &S, &Q);
+        std::vector<std::queue<int>> stations(N);
         for (int i = 0; i < N; i++)
         {
-            scanf("%d", &cargoes);
-            while (cargoes--)
+            scanf("%d", &Qi);
+            while (Qi--)
             {
-                scanf("%d", &cargo);
-                st[i].plataformB.push(cargo);
+                scanf("%d", &Qi_cargo);
+                stations[i].push(Qi_cargo);
             }
         }
-
-        curr_station = 0;
-        while (!all_empty(st))
+        int minutes = 0;
+        int current_station = 0;
+        while (!all_empty(stations))
         {
-            while (!cargo_carrier.empty() && cargo_carrier.top() != curr_station)
+            while (!cargo_carrier.empty())
             {
-                if (st[curr_station].plataformB.size() < Q)
+                int cargo = cargo_carrier.top();
+                minutes++;
+                if (cargo != current_station + 1)
                 {
-                    st[curr_station].plataformB.push(cargo_carrier.top());
-                    cargo_carrier.pop();
-                    minutes++;
+                    if (stations[current_station].size() < Q)
+                    {
+                        cargo_carrier.pop();
+                        stations[current_station].push(cargo);
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
                 else
-                    break;
+                {
+                    cargo_carrier.pop();
+                }
             }
-            if (!cargo_carrier.empty() && cargo_carrier.top() == curr_station)
+
+            while (cargo_carrier.size() < S && !stations[current_station].empty())
             {
-                cargo_carrier.pop();
+                int cargo = stations[current_station].front();
+                cargo_carrier.push(cargo);
+                stations[current_station].pop();
                 minutes++;
             }
-            while (cargo_carrier.size() < S)
-            {
-                cargo_carrier.push(st[curr_station].plataformB.front());
-                st[curr_station].plataformB.pop();
-                minutes++;
-            }
-            curr_station = (curr_station + 1) % N;
+
+            current_station = (current_station + 1) % N;
         }
+        printf("%d\n", minutes);
     }
 }
