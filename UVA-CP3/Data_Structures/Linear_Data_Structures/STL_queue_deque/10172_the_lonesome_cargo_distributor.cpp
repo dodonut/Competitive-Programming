@@ -15,9 +15,6 @@ bool all_empty(const std::vector<std::queue<int>> &stations)
 
 int main()
 {
-    freopen("input.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
-
     int n, SET, N, S, Q, Qi, Qi_cargo;
     scanf("%d", &SET);
     while (SET--)
@@ -36,39 +33,32 @@ int main()
         }
         int minutes = 0;
         int current_station = 0;
-        while (!all_empty(stations))
+        while (true)
         {
-            while (!cargo_carrier.empty())
+            while (!cargo_carrier.empty() && (stations[current_station].size() < Q || cargo_carrier.top() == current_station + 1))
             {
-                int cargo = cargo_carrier.top();
-                minutes++;
-                if (cargo != current_station + 1)
-                {
-                    if (stations[current_station].size() < Q)
-                    {
-                        cargo_carrier.pop();
-                        stations[current_station].push(cargo);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                if (cargo_carrier.top() == current_station + 1)
+                    cargo_carrier.pop();
                 else
                 {
+                    stations[current_station].push(cargo_carrier.top());
                     cargo_carrier.pop();
                 }
+                minutes++;
             }
 
             while (cargo_carrier.size() < S && !stations[current_station].empty())
             {
-                int cargo = stations[current_station].front();
-                cargo_carrier.push(cargo);
+                cargo_carrier.push(stations[current_station].front());
                 stations[current_station].pop();
                 minutes++;
             }
 
             current_station = (current_station + 1) % N;
+            if (cargo_carrier.empty() && all_empty(stations))
+                break;
+
+            minutes += 2;
         }
         printf("%d\n", minutes);
     }
