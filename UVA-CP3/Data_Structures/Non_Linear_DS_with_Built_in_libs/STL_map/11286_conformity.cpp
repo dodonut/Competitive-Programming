@@ -1,32 +1,35 @@
+#include <algorithm>
 #include <cstdio>
+#include <iostream>
 #include <map>
+using namespace std;
 
 int main()
 {
-    freopen("input.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
-
-    int T, course, s, tot;
-    while (scanf("%d", &T), T)
+    
+    int n, A[5];
+    char buf[20];
+    while (scanf("%d", &n) == 1 && n)
     {
-        std::map<int, int> frosh;
-        while (T--)
+        string str;
+        map<string, int> record;
+        while (n--)
         {
-            s = 5;
-            tot = 0;
-            while (s--)
-            {
-                scanf("%d", &course);
-                tot += course;
-            }
-            frosh[tot]++;
+            scanf("%d %d %d %d %d", &A[0], &A[1], &A[2], &A[3], &A[4]);
+            sort(A, A + 5);
+            sprintf(buf, "%d%d%d%d%d", A[0], A[1], A[2], A[3], A[4]);
+            str = buf;
+            record[str]++;
         }
-        int more = 0;
-        for (auto &&v : frosh)
+        int max = 0, maxNum = 0;
+        for (map<string, int>::iterator i = record.begin(); i != record.end(); i++)
         {
-            if (v.second > more)
-                more = v.second;
+            if (i->second > max)
+                max = i->second, maxNum = 0;
+            if (i->second == max)
+                maxNum += max;
         }
-        printf("%d\n", more);
+        printf("%d\n", maxNum);
     }
+    return 0;
 }
