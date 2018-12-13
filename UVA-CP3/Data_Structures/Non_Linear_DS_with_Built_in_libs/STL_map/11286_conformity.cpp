@@ -1,35 +1,34 @@
-#include <algorithm>
 #include <cstdio>
-#include <iostream>
 #include <map>
-using namespace std;
+#include <algorithm>
 
 int main()
 {
-    
-    int n, A[5];
-    char buf[20];
-    while (scanf("%d", &n) == 1 && n)
+    int n, A[5], max, maxNumStudents;
+    char s[20];
+    std::string t;
+    while (scanf("%d", &n) && n)
     {
-        string str;
-        map<string, int> record;
+        max = 0;
+        maxNumStudents = 0;
+        std::map<std::string, int> record;
         while (n--)
         {
+
             scanf("%d %d %d %d %d", &A[0], &A[1], &A[2], &A[3], &A[4]);
-            sort(A, A + 5);
-            sprintf(buf, "%d%d%d%d%d", A[0], A[1], A[2], A[3], A[4]);
-            str = buf;
-            record[str]++;
+            std::sort(A, A + 5);
+            sprintf(s, "%d%d%d%d%d", A[0], A[1], A[2], A[3], A[4]);
+            t = s;
+            record[t]++;
+            if (record[t] > max)
+                max = record[t];
         }
-        int max = 0, maxNum = 0;
-        for (map<string, int>::iterator i = record.begin(); i != record.end(); i++)
+        for (auto &&v : record)
         {
-            if (i->second > max)
-                max = i->second, maxNum = 0;
-            if (i->second == max)
-                maxNum += max;
+            if (v.second == max)
+                maxNumStudents += max;
         }
-        printf("%d\n", maxNum);
+        printf("%d\n", maxNumStudents);
     }
     return 0;
 }
