@@ -4,9 +4,6 @@
 
 int main()
 {
-    // freopen("input.txt", "r", stdin);
-    // freopen("out.txt", "w", stdout);
-
     int N, B, SG, SB, val;
     scanf("%d", &N);
     while (N--)
