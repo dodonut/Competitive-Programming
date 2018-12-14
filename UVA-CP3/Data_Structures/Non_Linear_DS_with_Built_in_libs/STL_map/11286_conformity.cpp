@@ -14,7 +14,6 @@ int main()
         std::map<std::string, int> record;
         while (n--)
         {
-
             scanf("%d %d %d %d %d", &A[0], &A[1], &A[2], &A[3], &A[4]);
             std::sort(A, A + 5);
             sprintf(s, "%d%d%d%d%d", A[0], A[1], A[2], A[3], A[4]);
