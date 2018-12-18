@@ -15,9 +15,6 @@ struct Register
 
 int main()
 {
-    // freopen("input.txt", "r", stdin);
-    // freopen("out.txt", "w", stdout);
-
     char s[10];
     int q_num, q_period, K;
 
