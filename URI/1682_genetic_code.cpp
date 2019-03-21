@@ -3,35 +3,39 @@ using namespace std;
 
 char genome[] = {'N', 'O', 'P'};
 
-//create thue_sequence helper to deal with n = 1 and 2
+bool is_thue(string curr_word)
+{
+    int s = curr_word.size();
+    if (s <= 1)
+        return true;
+    if (s == 2)
+        return curr_word[0] != curr_word[1];
+    string search = curr_word.substr(s - 2);
+    int k = curr_word.find(search);
+    int t = curr_word.rfind(search);
+    return curr_word.find(search) == curr_word.rfind(search);
+}
 
-string thue_sequence(string curr_word, int n, int pos)
+string thue_sequence(string curr_word, int n)
 {
     int _s = curr_word.size();
-    string to_search;
     if (_s == n)
+    {
         return curr_word;
+    }
     for (int i = 0; i < 3; i++)
     {
-        if (_s <= 1)
-            return thue_sequence(curr_word + genome[pos], n, pos + 1);
-        else
-        {
-            to_search = curr_word[_s - 1] + genome[pos];
-            if (curr_word.find(to_search) + 2 == curr_word.rfind(to_search))
-                return thue_sequence(curr_word + genome[pos], n, i);
-            return thue_sequence(curr_word, n, i + 1);
-        }
+        if (is_thue(curr_word + genome[i]))
+            return thue_sequence(curr_word + genome[i], n);
     }
-    return nullptr;
 }
 
 int main()
 {
     int n;
-    string s = "";
+    string s = "N";
     while (scanf("%d", &n), n)
     {
-        cout << thue_sequence(s, n, 0) << '\n';
+        cout << thue_sequence(s, n) << '\n';
     }
 }
