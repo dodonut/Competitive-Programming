@@ -1,22 +1,19 @@
 #include <iostream>
-#include <set>
+
 using namespace std;
 
-#define ii pair<int,int>
-#define iii pair<int, ii>
 int MAX, at[21], def[21], hab[21];
-bool colocado[21] {0};
 
-bool prassodia(iii falta, int index){
-    if(make_pair(0,make_pair(0,0)) == falta){
+bool prassodia(int a, int d, int h, int index, int cartas_juntadas){
+    if(!(a && d && h) && cartas_juntadas > 1){
         return true;
     }
     for(int i = index; i < MAX; i++){
-            int a = falta.first - at[i];
-            int d = falta.second.first - def[i];
-            int h = falta.second.second - hab[i];
-            if(a > 0 && d > 0 && h > 0)
-            return prassodia(make_pair(a, make_pair(d,h)), i);
+            int x = a - at[i];
+            int y = d - def[i];
+            int z = h - hab[i];
+            if((x >= 0 && y >= 0 && z >= 0))
+                return prassodia(x,y,z, i+1, cartas_juntadas + 1) || prassodia(a,d,h,i+1, cartas_juntadas);
     }
     return false;
 }
@@ -24,13 +21,13 @@ bool prassodia(iii falta, int index){
 int main(){
     int c, pr_at, pr_def, pr_hab;
 
-    scanf("%d%d%d%d", &MAX, &pr_at, &pr_def, &pr_hab);
+    scanf("%d %d %d %d", &MAX, &pr_at, &pr_def, &pr_hab);
 
     for(int i = 0; i < MAX; i++){
-        scanf("%d%d%d",at[i], def[i],hab[i]);
+        scanf("%d %d %d",&at[i], &def[i], &hab[i]);
         
     }
-    if(prassodia(make_pair(pr_at, make_pair(pr_def, pr_hab)),0))
+    if(prassodia(pr_at, pr_def, pr_hab,0,0))
         cout << "Y\n";
     else cout << "N\n";
     
