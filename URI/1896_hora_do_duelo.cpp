@@ -1,8 +1,11 @@
 #include <iostream>
-
+#include <set>
 using namespace std;
 
+#define ii pair<int,int>
+#define iii pair<int, ii>
 int MAX, at[21], def[21], hab[21];
+bool colocado[21] {0};
 
 bool prassodia(int a, int d, int h, int index, int cartas_juntadas){
     if(!(a && d && h) && cartas_juntadas > 1){
@@ -12,8 +15,8 @@ bool prassodia(int a, int d, int h, int index, int cartas_juntadas){
             int x = a - at[i];
             int y = d - def[i];
             int z = h - hab[i];
-            if((x >= 0 && y >= 0 && z >= 0))
-                return prassodia(x,y,z, i+1, cartas_juntadas + 1) || prassodia(a,d,h,i+1, cartas_juntadas);
+            if(x >= 0 && y >= 0 && z >= 0)
+                return prassodia(x,y,z, i+1, cartas_juntadas + 1);
     }
     return false;
 }
