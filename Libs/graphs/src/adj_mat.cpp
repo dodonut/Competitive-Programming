@@ -1,4 +1,4 @@
-#include "adjmat.h"
+#include "adj_mat.h"
 
 Graph::AdjMat::AdjMat(size_t s) : _nodes(s) { _set.reserve(s * s); }
 

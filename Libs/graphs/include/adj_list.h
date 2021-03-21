@@ -8,11 +8,13 @@ namespace Graph {
 
 class AdjList {
 private:
-  std::vector<std::vector<int>> _set;
+  std::vector<std::vector<size_t>> _set;
 
 public:
+  inline std::vector<size_t> get(size_t node) const { return _set.at(node); }
+  inline size_t size() const { return _set.size(); }
   void add_node();
-  void add_edge(size_t i, size_t j);
+  void add_edge(size_t start, size_t end);
   void remove_node(size_t node);
   void remove_edge(size_t node_start, size_t node_value);
   void clear();
