@@ -1,15 +1,15 @@
-
 #include <algorithm>
 #include <cstdio>
 #include <iostream>
 #include <iterator>
 #include <string>
 using std::cin;
+using std::cout;
 using std::string;
-bool done = false;
 
 int mat[9][9];
 bool check[9][9];
+bool done = false;
 
 void print_mat() {
     for (int i = 0; i < 9; i++) {
@@ -41,27 +41,27 @@ bool valid(int r, int c, int value) {
 }
 
 void solve_sudoku(int pos, int value) {
-    if (pos == 81) {
-        done = true; return;
-    }
-    if (value > 9) return;
     while(check[pos/9][pos%9] != 0) pos++;
     int r = pos / 9;
     int c = pos % 9;
-    if(!valid(r,c,value)) solve_sudoku(pos, value + 1);
-    else {
-        for (int i = pos; i < 81 && !done; i++) {
-            mat[r][c] = value;
-            solve_sudoku(pos + 1, 1);
-            while(!valid(r,c,value) && !done) {
-                value++;
-            }
-            if (value > 9) {
-                mat[r][c] = 0;
-                break;
-            }
-        }
+    if (pos == 81) {
+        done = true; return;
     }
+    while(!valid(r,c,value)) {
+        value++;
+        if (value > 9) return;
+    }
+    for (int i = pos; i < 81 && !done; i++) {
+        mat[r][c] = value;
+        solve_sudoku(pos + 1, 1);
+        while(!done && !valid(r,c,value)) {
+            value++;
+        }
+        if (value > 9) {
+            mat[r][c] = 0;
+            break;
+        }
+    } 
 }
 
 
@@ -85,7 +85,6 @@ int main() {
     }
 
     solve_sudoku(0, 1);
-
     print_mat();
 }
 
